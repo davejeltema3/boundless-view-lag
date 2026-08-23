@@ -2,8 +2,9 @@ name: view-lag probe
 
 on:
   schedule:
-    # every 15 minutes (UTC). GitHub's floor is 5 minutes: change to */5 to tighten.
-    - cron: "*/15 * * * *"
+    # Every 5 minutes, GitHub's floor, for the transition window around
+    # 2026-08-24. Drop to "*/15" or "*/30" once the switch is captured.
+    - cron: "*/5 * * * *"
   workflow_dispatch: {}
 
 concurrency:
@@ -17,7 +18,7 @@ jobs:
   poll:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Poll
         env:
@@ -25,7 +26,8 @@ jobs:
           YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
           YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          LOOKBACK_DAYS: "10"
+          LOOKBACK_DAYS: "12"
+          TOP_N: "20"
         run: python3 poll.py
 
       - name: Commit log

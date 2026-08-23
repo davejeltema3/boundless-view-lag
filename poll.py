@@ -2,25 +2,31 @@
 """
 Boundless view-lag probe.
 
-Answers one question: how often does the YouTube Analytics API actually refresh
-`engagedViews`, and how far behind real time is it?
+Two jobs:
 
-Every run takes a full snapshot (public counters from the Data API + day-level
-views/engagedViews from the Analytics API), diffs it against the previous run,
-appends both to data/, and pings Discord only when something moved.
+1. Measure how often the YouTube Analytics API refreshes `engagedViews`, and how
+   far behind real time it runs. Answered by timestamping the moment each new
+   day becomes available.
+
+2. Capture the 2026-08-24 view-counting switch at 5-minute resolution while it
+   happens. YouTube's notice says the pre-switch public view count "will no
+   longer be accessible via the YouTube Public Data API" afterwards, so the
+   catalog-wide public counters recorded here cannot be reconstructed later.
 
 Env:
   YT_CLIENT_ID, YT_CLIENT_SECRET, YT_REFRESH_TOKEN   (required)
   DISCORD_WEBHOOK_URL                                (optional)
-  TRACK_VIDEO_IDS   comma-separated, optional pin. default = top 5 by recent views
-  LOOKBACK_DAYS     default 10
-  DRY_RUN=1         print the snapshot, write nothing, ping nothing
+  LOOKBACK_DAYS     default 12
+  TOP_N             default 20
+  TRACK_VIDEO_IDS   comma-separated, overrides the pinned set
+  DRY_RUN=1         print, write nothing, ping nothing
 """
 
 import json
 import os
 import sys
 import datetime
+import statistics
 import urllib.request
 import urllib.parse
 import urllib.error
@@ -29,15 +35,29 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(ROOT, "data")
 SNAPSHOTS = os.path.join(DATA, "snapshots.jsonl")
 CHANGES = os.path.join(DATA, "changes.jsonl")
-STATE = os.path.join(DATA, "state.json")
 RETENTION = os.path.join(DATA, "retention.jsonl")
+STATE = os.path.join(DATA, "state.json")
+CATALOG_PRE = os.path.join(DATA, "catalog_pre.json")
+PULSE = os.path.join(DATA, "pulse.csv")
+
+# Full snapshots are ~9KB. At 5-minute cadence that is 2.6MB/day into git, so the
+# heavy record is written hourly or on any change, while a one-line pulse row goes
+# down every single run. The pulse is what the rate analysis actually needs.
+FULL_SNAPSHOT_EVERY_MIN = 60
 
 DRY = os.environ.get("DRY_RUN") == "1"
-LOOKBACK = int(os.environ.get("LOOKBACK_DAYS", "10"))
+LOOKBACK = int(os.environ.get("LOOKBACK_DAYS", "12"))
+TOP_N = int(os.environ.get("TOP_N", "20"))
 
 DATA_API = "https://www.googleapis.com/youtube/v3"
 ANALYTICS_API = "https://youtubeanalytics.googleapis.com/v2/reports"
 TOKEN_URL = "https://oauth2.googleapis.com/token"
+
+# Rate-jump alerting. The switch should show up as a step change in views/hour
+# across the whole catalog, so this is the tripwire for "it just happened".
+RATE_SAMPLES = 12
+RATE_MULTIPLE = 1.75
+RATE_MIN_DELTA = 40
 
 
 def die(msg):
@@ -51,8 +71,7 @@ def http(url, data=None, headers=None):
         with urllib.request.urlopen(req, timeout=45) as r:
             raw = r.read()
     except urllib.error.HTTPError as e:
-        body = e.read().decode()[:800]
-        die("HTTP %s on %s\n%s" % (e.code, url.split("?")[0], body))
+        die("HTTP %s on %s\n%s" % (e.code, url.split("?")[0], e.read().decode()[:800]))
     # Discord webhooks answer 204 with an empty body. Google always sends JSON.
     if not raw:
         return {}
@@ -80,119 +99,55 @@ def get(url, params, token):
                 headers={"Authorization": "Bearer " + token})
 
 
-def analytics(token, metrics, dimensions, start, end, filters=None, sort=None, maxr=None):
-    p = {
-        "ids": "channel==MINE",
-        "startDate": start,
-        "endDate": end,
-        "metrics": metrics,
-        "dimensions": dimensions,
-    }
+def analytics(token, metrics, dimensions, start, end,
+              filters=None, sort=None, maxr=None):
+    p = {"ids": "channel==MINE", "startDate": start, "endDate": end,
+         "metrics": metrics, "dimensions": dimensions}
     if filters:
         p["filters"] = filters
     if sort:
         p["sort"] = sort
     if maxr:
         p["maxResults"] = str(maxr)
-    r = get(ANALYTICS_API, p, token)
-    return r.get("rows", [])
+    return get(ANALYTICS_API, p, token).get("rows", [])
 
 
-def snapshot(token):
-    now = datetime.datetime.now(datetime.timezone.utc)
-    today = now.date()
-    start = (today - datetime.timedelta(days=LOOKBACK)).isoformat()
-    end = today.isoformat()
-
-    # --- public counters (Data API) ---
+def catalog_ids(token):
     ch = get(DATA_API + "/channels",
-             {"part": "statistics,contentDetails", "mine": "true"}, token)["items"][0]
-    ch_stats = ch["statistics"]
+             {"part": "contentDetails,statistics", "mine": "true"}, token)["items"][0]
+    up = ch["contentDetails"]["relatedPlaylists"]["uploads"]
+    ids, page = [], None
+    while True:
+        p = {"part": "contentDetails", "playlistId": up, "maxResults": "50"}
+        if page:
+            p["pageToken"] = page
+        r = get(DATA_API + "/playlistItems", p, token)
+        ids += [i["contentDetails"]["videoId"] for i in r.get("items", [])]
+        page = r.get("nextPageToken")
+        if not page:
+            return ids, ch["statistics"]
 
-    # --- which videos to track ---
-    pinned = os.environ.get("TRACK_VIDEO_IDS", "").strip()
-    top_rows = analytics(token, "views,engagedViews", "video", start, end,
-                         sort="-views", maxr=5)
-    if pinned:
-        vids = [v.strip() for v in pinned.split(",") if v.strip()]
-    else:
-        vids = [r[0] for r in top_rows]
 
-    # --- public per-video counters ---
-    vpub = {}
-    if vids:
-        items = get(DATA_API + "/videos",
-                    {"part": "statistics,snippet", "id": ",".join(vids)}, token).get("items", [])
-        for it in items:
-            s = it["statistics"]
-            vpub[it["id"]] = {
-                "title": it["snippet"]["title"][:80],
-                "publishedAt": it["snippet"]["publishedAt"],
-                "viewCount": int(s.get("viewCount", 0)),
-                "likeCount": int(s.get("likeCount", 0)),
-                "commentCount": int(s.get("commentCount", 0)),
-            }
-
-    # --- analytics day series, channel level ---
-    # averageViewPercentage matters here beyond curiosity: if YouTube recomputes
-    # retention against the new first-frame view count, every retention number on
-    # the platform drops on 2026-08-24 without any video changing. This catches it.
-    ch_days = {}
-    for row in analytics(token,
-                         "views,engagedViews,estimatedMinutesWatched,"
-                         "averageViewDuration,averageViewPercentage",
-                         "day", start, end, sort="day"):
-        ch_days[row[0]] = {
-            "views": row[1], "engagedViews": row[2], "minutes": row[3],
-            "avgDuration": row[4], "avgViewPct": row[5],
-        }
-
-    # --- analytics day series, per video ---
-    vid_days = {}
-    for vid in vids:
-        d = {}
-        for row in analytics(token, "views,engagedViews,averageViewPercentage",
-                             "day", start, end, filters="video==" + vid, sort="day"):
-            d[row[0]] = {"views": row[1], "engagedViews": row[2], "avgViewPct": row[3]}
-        vid_days[vid] = d
-
-    # --- day x traffic source, channel level ---
-    # The real-time estimate is only as good as the mix model. Ratios differ hard
-    # by source, so hold them per source per day rather than one blended number.
-    traffic_days = {}
-    for row in analytics(token, "views,engagedViews", "day,insightTrafficSourceType",
-                         start, end, sort="day"):
-        traffic_days.setdefault(row[0], {})[row[1]] = {"views": row[2], "engagedViews": row[3]}
-
-    latest = max(ch_days) if ch_days else None
-    lag_hours = None
-    if latest:
-        # hours from the END of the latest available day to now
-        day_end = datetime.datetime.fromisoformat(latest + "T23:59:59+00:00")
-        lag_hours = round((now - day_end).total_seconds() / 3600.0, 2)
-
-    return {
-        "ts": now.isoformat(timespec="seconds"),
-        "channel_public": {
-            "viewCount": int(ch_stats.get("viewCount", 0)),
-            "subscriberCount": int(ch_stats.get("subscriberCount", 0)),
-            "videoCount": int(ch_stats.get("videoCount", 0)),
-        },
-        "tracked_vids": vids,
-        "range": [start, end],
-        "latest_analytics_day": latest,
-        "lag_hours": lag_hours,
-        "channel_days": ch_days,
-        "traffic_days": traffic_days,
-        "videos_public": vpub,
-        "video_days": vid_days,
-    }
+def tracked_videos(life_rows):
+    """Pinned to the pre-change top N so before and after compare like for like."""
+    env = os.environ.get("TRACK_VIDEO_IDS", "").strip()
+    if env:
+        return [v.strip() for v in env.split(",") if v.strip()]
+    if os.path.exists(CATALOG_PRE):
+        try:
+            with open(CATALOG_PRE) as f:
+                life = json.load(f)["lifetime_analytics"]
+            return [v for v, _ in sorted(life.items(),
+                                         key=lambda kv: -kv[1]["views"])[:TOP_N]]
+        except Exception as exc:
+            print("catalog_pre unreadable (%s), falling back" % exc, file=sys.stderr)
+    return [r[0] for r in life_rows[:TOP_N]]
 
 
 def retention_curves(token, vids, start, end):
-    """100-bucket retention curve per video. For a 15-minute video each bucket is
-    about 9 seconds, so bucket 1 is the closest API proxy for 'did they stay past
-    the opening'. Shorter videos give finer resolution."""
+    """100-bucket curve per video. Bucket width is 1% of runtime, so a 15-minute
+    video gives ~9s buckets. Closest available proxy for the sub-30s dropoff that
+    an engaged view actually measures."""
     out = {}
     for vid in vids:
         rows = analytics(token, "audienceWatchRatio,relativeRetentionPerformance",
@@ -202,49 +157,139 @@ def retention_curves(token, vids, start, end):
     return out
 
 
+def snapshot(token):
+    now = datetime.datetime.now(datetime.timezone.utc)
+    today = now.date()
+    start = (today - datetime.timedelta(days=LOOKBACK)).isoformat()
+    end = today.isoformat()
+
+    ids, ch_stats = catalog_ids(token)
+
+    # --- public counters for the WHOLE catalog, not a sample ---
+    public = {}
+    for i in range(0, len(ids), 50):
+        for it in get(DATA_API + "/videos",
+                      {"part": "statistics", "id": ",".join(ids[i:i + 50])},
+                      token).get("items", []):
+            s = it["statistics"]
+            public[it["id"]] = [int(s.get("viewCount", 0)),
+                                int(s.get("likeCount", 0)),
+                                int(s.get("commentCount", 0))]
+    catalog_views = sum(v[0] for v in public.values())
+
+    # --- which videos get the day-level analytics treatment ---
+    life_rows = analytics(token, "views", "video", start, end, sort="-views", maxr=50)
+    vids = tracked_videos(life_rows)
+
+    # --- channel day series ---
+    ch_days = {}
+    for row in analytics(token,
+                         "views,engagedViews,estimatedMinutesWatched,"
+                         "averageViewDuration,averageViewPercentage",
+                         "day", start, end, sort="day"):
+        ch_days[row[0]] = {"views": row[1], "engagedViews": row[2], "minutes": row[3],
+                           "avgDuration": row[4], "avgViewPct": row[5]}
+
+    # --- day x video for all tracked videos, in ONE call ---
+    vid_days = {}
+    if vids:
+        for row in analytics(token, "views,engagedViews,averageViewPercentage",
+                             "day,video", start, end,
+                             filters="video==" + ",".join(vids), sort="day", maxr=500):
+            vid_days.setdefault(row[1], {})[row[0]] = {
+                "views": row[2], "engagedViews": row[3], "avgViewPct": row[4]}
+
+    # --- day x traffic source ---
+    traffic_days = {}
+    for row in analytics(token, "views,engagedViews", "day,insightTrafficSourceType",
+                         start, end, sort="day", maxr=500):
+        traffic_days.setdefault(row[0], {})[row[1]] = {"views": row[2],
+                                                       "engagedViews": row[3]}
+
+    latest = max(ch_days) if ch_days else None
+    lag_hours = None
+    if latest:
+        day_end = datetime.datetime.fromisoformat(latest + "T23:59:59+00:00")
+        lag_hours = round((now - day_end).total_seconds() / 3600.0, 2)
+
+    return {
+        "ts": now.isoformat(timespec="seconds"),
+        "channel_public": {k: int(v) for k, v in ch_stats.items() if str(v).isdigit()},
+        "catalog_views": catalog_views,
+        "catalog_size": len(public),
+        "public": public,
+        "tracked_vids": vids,
+        "range": [start, end],
+        "latest_analytics_day": latest,
+        "lag_hours": lag_hours,
+        "channel_days": ch_days,
+        "video_days": vid_days,
+        "traffic_days": traffic_days,
+    }
+
+
 def fmt(n):
     return "{:,}".format(n)
 
 
-def diff(prev, cur):
-    """Return a list of human-readable change lines. Empty list = nothing moved."""
+def diff(prev, cur, rates):
     out = []
     if not prev:
-        return ["first run: baseline captured, latest analytics day %s (lag %sh)"
-                % (cur["latest_analytics_day"], cur["lag_hours"])]
+        return ["first run: baseline captured, latest analytics day %s (lag %sh), "
+                "catalog %s views across %d videos"
+                % (cur["latest_analytics_day"], cur["lag_hours"],
+                   fmt(cur["catalog_views"]), cur["catalog_size"])]
 
-    # 1. a new analytics day appeared -- this is the headline event
+    # 1. a new analytics day appeared
     if cur["latest_analytics_day"] != prev.get("latest_analytics_day"):
         d = cur["latest_analytics_day"]
         row = cur["channel_days"].get(d, {})
         v, e = row.get("views", 0), row.get("engagedViews", 0)
         gap = (100.0 * (v - e) / v) if v else 0.0
-        out.append("NEW DAY %s appeared (lag %sh) -- views %s / engaged %s / gap %.1f%%"
-                   % (d, cur["lag_hours"], fmt(v), fmt(e), gap))
+        out.append("NEW DAY %s appeared (lag %sh) -- views %s / engaged %s / gap %.1f%% "
+                   "/ avg view %% %s"
+                   % (d, cur["lag_hours"], fmt(v), fmt(e), gap, row.get("avgViewPct")))
 
-    # 2. a previously-reported day was revised
+    # 2. a previously-reported day changed value
     for d, row in sorted(cur["channel_days"].items()):
         old = prev.get("channel_days", {}).get(d)
-        if not old or d == cur["latest_analytics_day"] and d != prev.get("latest_analytics_day"):
+        if not old or (d == cur["latest_analytics_day"]
+                       and d != prev.get("latest_analytics_day")):
             continue
         for k in ("views", "engagedViews"):
             if old.get(k) != row.get(k):
                 out.append("REVISED %s %s: %s -> %s (%+d)"
                            % (d, k, fmt(old.get(k, 0)), fmt(row.get(k, 0)),
                               row.get(k, 0) - old.get(k, 0)))
+        if old.get("avgViewPct") != row.get("avgViewPct"):
+            out.append("REVISED %s avgViewPct: %s -> %s"
+                       % (d, old.get("avgViewPct"), row.get("avgViewPct")))
+
+    # 3. public view rate step change -- the tripwire for the counting switch
+    delta = cur["catalog_views"] - prev.get("catalog_views", cur["catalog_views"])
+    hours = (datetime.datetime.fromisoformat(cur["ts"])
+             - datetime.datetime.fromisoformat(prev["ts"])).total_seconds() / 3600.0
+    if hours > 0:
+        rate = delta / hours
+        if len(rates) >= 4 and delta >= RATE_MIN_DELTA:
+            base = statistics.median(rates)
+            if base > 0 and rate > RATE_MULTIPLE * base:
+                out.append("RATE JUMP public views running at %.0f/hr vs trailing "
+                           "median %.0f/hr (%.1fx) -- %+d views in %.0f min"
+                           % (rate, base, rate / base, delta, hours * 60))
     return out
 
 
 def post_discord(lines, cur):
-    """Post as Hazel, matching the embed style of the other #dashboard alerts."""
     url = os.environ.get("DISCORD_WEBHOOK_URL")
     if not url or not lines:
         return
-
-    headline = lines[0]
-    if headline.startswith("NEW DAY"):
+    head = lines[0]
+    if head.startswith("RATE JUMP"):
+        event, color = "Public view rate jumped", 0xef4444
+    elif head.startswith("NEW DAY"):
         event, color = "New day appeared", 0x22c55e
-    elif headline.startswith("REVISED"):
+    elif head.startswith("REVISED"):
         event, color = "Day revised", 0xf59e0b
     else:
         event, color = "Baseline captured", 0x8b5cf6
@@ -259,20 +304,21 @@ def post_discord(lines, cur):
         "color": color,
         "fields": [
             {"name": "Event", "value": event, "inline": True},
-            {"name": "Latest day", "value": str(cur.get("latest_analytics_day")), "inline": True},
+            {"name": "Latest day", "value": str(cur.get("latest_analytics_day")),
+             "inline": True},
             {"name": "Lag", "value": "%sh" % cur.get("lag_hours"), "inline": True},
-            {"name": "Public views (live)", "value": fmt(cur["channel_public"]["viewCount"]), "inline": True},
+            {"name": "Catalog views (live)", "value": fmt(cur["catalog_views"]),
+             "inline": True},
         ],
         "footer": {"text": "boundless-view-lag"},
         "timestamp": cur["ts"],
     }
     try:
-        # Discord's edge rejects the default urllib User-Agent with a 403.
         http(url, data=json.dumps({"embeds": [embed]}).encode(), headers={
             "Content-Type": "application/json",
             "User-Agent": "boundless-view-lag/1.0 (+github actions probe)",
         })
-    except Exception as exc:  # never let a failed ping kill the run
+    except Exception as exc:
         print("discord post failed (%s), continuing" % exc, file=sys.stderr)
 
 
@@ -280,43 +326,75 @@ def main():
     token = access_token()
     cur = snapshot(token)
 
-    prev = None
+    prev, rates = None, []
     if os.path.exists(STATE):
         with open(STATE) as f:
             prev = json.load(f)
+        rates = prev.get("_rates", [])
 
-    lines = diff(prev, cur)
+    lines = diff(prev, cur, rates)
 
-    print("ts=%s latest_day=%s lag=%sh public_views=%s"
+    # roll the rate history forward
+    if prev:
+        hrs = (datetime.datetime.fromisoformat(cur["ts"])
+               - datetime.datetime.fromisoformat(prev["ts"])).total_seconds() / 3600.0
+        if hrs > 0:
+            rates = (rates + [(cur["catalog_views"] - prev.get("catalog_views", 0)) / hrs])
+            rates = rates[-RATE_SAMPLES:]
+
+    print("ts=%s latest_day=%s lag=%sh catalog=%s (%d videos)"
           % (cur["ts"], cur["latest_analytics_day"], cur["lag_hours"],
-             fmt(cur["channel_public"]["viewCount"])))
+             fmt(cur["catalog_views"]), cur["catalog_size"]))
     for l in lines:
         print("  CHANGE: " + l)
     if not lines:
         print("  no change")
 
     if DRY:
-        print(json.dumps(cur, indent=1)[:3000])
         return
 
     os.makedirs(DATA, exist_ok=True)
-    with open(SNAPSHOTS, "a") as f:
-        f.write(json.dumps(cur) + "\n")
 
-    # Retention curves are 100 rows per video, so only grab them when the
-    # underlying data actually moved to a new day (or on the very first run).
+    # one compact row every run
+    if not os.path.exists(PULSE):
+        with open(PULSE, "w") as f:
+            f.write("ts,catalog_views,subscribers,latest_analytics_day,lag_hours,catalog_size\n")
+    with open(PULSE, "a") as f:
+        f.write("%s,%d,%s,%s,%s,%d\n" % (
+            cur["ts"], cur["catalog_views"],
+            cur["channel_public"].get("subscriberCount", ""),
+            cur["latest_analytics_day"], cur["lag_hours"], cur["catalog_size"]))
+
+    # full snapshot on change, hourly otherwise
+    last_full = (prev or {}).get("_last_full")
+    due = True
+    if last_full and not lines:
+        age = (datetime.datetime.fromisoformat(cur["ts"])
+               - datetime.datetime.fromisoformat(last_full)).total_seconds() / 60.0
+        due = age >= FULL_SNAPSHOT_EVERY_MIN
+    if due:
+        with open(SNAPSHOTS, "a") as f:
+            f.write(json.dumps(cur) + "\n")
+        cur["_last_full"] = cur["ts"]
+    else:
+        cur["_last_full"] = last_full
+
     if any(l.startswith(("NEW DAY", "first run")) for l in lines):
-        start, end = cur["range"]
-        curves = retention_curves(token, cur["tracked_vids"], start, end)
+        s, e = cur["range"]
+        curves = retention_curves(token, cur["tracked_vids"], s, e)
         if curves:
             with open(RETENTION, "a") as f:
-                f.write(json.dumps({"ts": cur["ts"], "day": cur["latest_analytics_day"],
+                f.write(json.dumps({"ts": cur["ts"],
+                                    "day": cur["latest_analytics_day"],
                                     "curves": curves}) + "\n")
             print("  captured retention curves for %d videos" % len(curves))
+
     if lines:
         with open(CHANGES, "a") as f:
             f.write(json.dumps({"ts": cur["ts"], "changes": lines}) + "\n")
         post_discord(lines, cur)
+
+    cur["_rates"] = [round(r, 2) for r in rates]
     with open(STATE, "w") as f:
         json.dump(cur, f, indent=1)
 

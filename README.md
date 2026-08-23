@@ -1,119 +1,110 @@
 # boundless-view-lag
 
-A throwaway research probe with one job: find out how often the YouTube Analytics
-API actually refreshes `engagedViews`, and how far behind real time it runs.
+Two jobs, one poller.
 
-Context: on 2026-08-24 YouTube started counting a view from the first frame on
-long-form and live, and the old methodology survives as `engagedViews` in
-Analytics only. If a video's title is going to display both numbers, we need to
-know how stale the engaged number is at any moment.
+**1. Measure the lag.** How often does the YouTube Analytics API refresh
+`engagedViews`, and how far behind real time does it run? Answered by
+timestamping the exact moment each new day becomes queryable.
 
-## What it does
+**2. Capture the switch.** On 2026-08-24 YouTube started counting a view from the
+first frame on long-form and live, and the old methodology survives as
+`engagedViews` in Analytics only. YouTube's own developer notice says the
+pre-switch public count "will no longer be accessible via the YouTube Public Data
+API" afterwards. Everything the Data API records here is therefore unrepeatable.
 
-Every 15 minutes:
+## What runs, every 5 minutes
 
-1. Refreshes an OAuth access token.
-2. Reads public counters from the Data API (channel views/subs, plus
-   views/likes/comments for the 5 videos with the most traffic in the window).
-3. Reads day-level series from the Analytics API: `views`, `engagedViews`,
-   `estimatedMinutesWatched`, `averageViewDuration` and `averageViewPercentage`,
-   at channel level and per video, plus `views`/`engagedViews` split by
-   `day x insightTrafficSourceType`.
-   On a new-day event it also captures the 100-bucket retention curve
-   (`audienceWatchRatio` by `elapsedVideoTimeRatio`) for each tracked video into
-   `data/retention.jsonl`.
-4. Diffs against the previous run.
-5. Appends the snapshot to `data/snapshots.jsonl`, and if anything moved, appends
-   to `data/changes.jsonl` and posts to Discord.
+1. Refresh an OAuth access token. Analytics is private channel data, so this
+   needs the channel owner's refresh token. An API key cannot reach it.
+2. **Public counters for the entire catalog**, all 110 videos, not a sample.
+   Views, likes, comments. Three `videos.list` calls plus a playlist walk.
+3. Analytics day series at channel level: `views`, `engagedViews`,
+   `estimatedMinutesWatched`, `averageViewDuration`, `averageViewPercentage`.
+4. Analytics `day x video` for the 20 tracked videos, in a single call.
+5. Analytics `day x insightTrafficSourceType`.
+6. On a new-day event only, 100-bucket retention curves for all 20 tracked videos.
 
-Alerts post through Hazel's own webhook, so they land in `#dashboard` styled like
-the payment and refund alerts rather than as a separate bot. That webhook is
-shared with `bcp-program`'s `DISCORD_WEBHOOK_URL`, so regenerating it in Discord
-breaks both.
+Quota: about 7 Data API units per run, roughly 2,000 a day against the 10,000
+budget. The Analytics API is metered separately, so none of this competes with a
+future title updater.
 
-Two kinds of change matter:
+## What it watches for
 
-- **NEW DAY** — a day that wasn't available before now is. The timestamp on that
-  event is the answer to "how long is the lag."
-- **REVISED** — a day that was already reported changed value. Tells us whether
-  numbers keep settling after they first appear.
+- **NEW DAY** — a day that wasn't queryable before now is. The `lag_hours` on that
+  alert is the actual measurement this repo exists for.
+- **REVISED** — a day already reported changed value, including
+  `averageViewPercentage`. Tells us whether numbers keep settling after landing.
+- **RATE JUMP** — catalog-wide views per hour running more than 1.75x the trailing
+  median. This is the tripwire for the counting switch itself, which should look
+  like a step change in the public counter.
+
+Alerts post through Hazel's own webhook into `#dashboard`, styled like the
+payment alerts, colour-coded by event. That webhook is shared with
+`bcp-program`'s `DISCORD_WEBHOOK_URL`, so regenerating it in Discord breaks both.
+
+## Files
+
+| File | What it holds |
+|---|---|
+| `data/pulse.csv` | one row per run: timestamp, catalog views, subs, latest day, lag |
+| `data/snapshots.jsonl` | full snapshot, written hourly or on any change |
+| `data/changes.jsonl` | only the runs where something moved |
+| `data/retention.jsonl` | 100-bucket retention curves, captured on new-day events |
+| `data/catalog_pre.json` | the pre-switch capture. See below. |
+| `data/state.json` | last snapshot, for diffing |
+
+`pulse.csv` exists because full snapshots are ~9KB and 5-minute cadence would put
+2.6MB a day into git. The pulse row is what the rate analysis needs, so it goes
+down every run while the heavy record lands hourly.
+
+## The pre/post capture
+
+`capture_baseline.py` takes the deep snapshot that only makes sense at two moments.
+
+```
+LABEL=pre  python3 capture_baseline.py     # run before 2026-08-24
+LABEL=post python3 capture_baseline.py     # run after the switch has settled
+```
+
+It records every video's public counters, lifetime `views` vs `engagedViews` per
+video, 100-bucket retention curves for the top 20, and views/engagedViews split
+by traffic source, device and subscriber status, both lifetime and last 90 days.
+
+`data/catalog_pre.json` was captured 2026-08-23, before the switch:
+110 videos, 3,956,757 total public views.
+
+The tracked 20 are pinned from that file, so the before and after compare like
+for like even if the ranking shifts.
+
+## Two questions this is built to answer
+
+**Where is the engaged threshold?** YouTube says only "some amount of seconds"
+after the first frame. It is not 30 seconds, that figure was always about ads.
+Compare each video's post-switch engaged ratio against its own first-bucket watch
+ratio across 20 videos and the threshold falls out. Bucket width is 1% of runtime,
+so shorter videos resolve it more tightly.
+
+**Does retention itself drop on the 24th?** Retention is a ratio whose denominator
+is "people who viewed". If YouTube recomputes it against the new first-frame
+count, every retention graph on the platform falls overnight with no video
+changing. `averageViewPercentage` is logged daily and the full curves on every
+new-day event, so the before/after is on record.
 
 ## Setup
 
-Repo secrets (Settings > Secrets and variables > Actions):
-
-| Secret | Where it comes from |
-|---|---|
-| `YT_CLIENT_ID` | `youtube-oauth.json` |
-| `YT_CLIENT_SECRET` | `youtube-oauth.json` |
-| `YT_REFRESH_TOKEN` | `youtube-oauth.json` |
-| `DISCORD_WEBHOOK_URL` | `view-lag-probe-webhook.json`, optional |
-
-The refresh token already carries both `youtube.force-ssl` and
-`yt-analytics.readonly`, so no new consent is needed.
-
-Then Actions > "view-lag probe" > Run workflow, to seed the baseline.
-
-## Knobs
-
-- `cron: "*/15"` in the workflow. GitHub's hard floor is 5 minutes.
-- `LOOKBACK_DAYS` (default 10) — how many days back each snapshot covers.
-- `TRACK_VIDEO_IDS` — comma-separated, pins specific videos instead of
-  auto-picking the top 5 by recent views.
-- `DRY_RUN=1` locally — prints the snapshot, writes nothing, pings nothing.
-
-## Local run
-
-```
-export YT_CLIENT_ID=... YT_CLIENT_SECRET=... YT_REFRESH_TOKEN=...
-DRY_RUN=1 python3 poll.py
-```
-
-No dependencies. Standard library only.
-
-## Why these extra metrics
-
-`averageViewPercentage` is here for a specific reason. Retention is a ratio, and
-its denominator is "people who viewed". If YouTube recomputes retention against
-the new first-frame view count, every retention graph on the platform drops on
-2026-08-24 without a single video changing. Logging it daily catches that.
-
-The traffic-source split is there because engaged ratios differ hard by source.
-On this channel today, Shorts traffic sits at 22.6% while every long-form source
-is 97-100%, and the channel-level average is a blend of the two. Any real-time
-estimate has to weight by mix rather than apply one flat number.
-
-The retention curves are the closest available proxy for the sub-30-second
-dropoff, which is what an engaged view actually measures. Bucket resolution is
-1% of video length, so a 15-minute video gives ~9-second buckets and a 5-minute
-video gives ~3-second buckets. Shorter videos calibrate better.
+Repo secrets: `YT_CLIENT_ID`, `YT_CLIENT_SECRET`, `YT_REFRESH_TOKEN` from
+`youtube-oauth.json`, and `DISCORD_WEBHOOK_URL` from
+`view-lag-probe-webhook.json`. The refresh token already carries both
+`youtube.force-ssl` and `yt-analytics.readonly`.
 
 ## Known limits
 
-- Analytics API has no dimension finer than `day`. `month` is the only other
-  time dimension. So a day-level number refreshing on some cadence is the ceiling,
-  and there is no faster source: Studio's realtime tab is views-only, and the bulk
-  Reporting API is slower, not faster.
-- GitHub Actions schedules are best-effort and can drift 5-20 minutes under load.
-  Each snapshot stamps its own UTC timestamp, so drift widens resolution rather
-  than corrupting the measurement.
-- Scheduled workflows in a repo with no activity for 60 days get disabled by
-  GitHub. Not a concern for a probe measured in weeks.
-- Quota: each poll costs a handful of Data API units against the 10,000/day
-  project budget. The Analytics API is a separate service with its own quota, so
-  polling does not eat into the budget a future title-updater would need.
-
-## Baseline captured 2026-08-23 (pre-change)
-
-```
-day          views  engaged   gap
-2026-08-15    5264     5256   0.2%
-2026-08-16    5703     5698   0.1%
-2026-08-17    6474     6460   0.2%
-2026-08-18    5790     5780   0.2%
-2026-08-19   12812    12633   1.4%
-2026-08-20    7114     7036   1.1%
-2026-08-21    8896     8802   1.1%
-```
-
-At 2026-08-23 20:25 UTC the latest available day was 2026-08-21, a lag of 44.4 hours.
+- Analytics has no time dimension finer than `day`. `month` is the only other
+  one. There is no faster source: Studio's Realtime card is views-only and has no
+  API, and the bulk Reporting API is slower.
+- GitHub Actions schedules are best-effort and drift 5-20 minutes under load.
+  Every row stamps its own UTC time, so drift widens resolution rather than
+  corrupting it.
+- On this channel pre-switch, every sub-100% engaged ratio was Shorts
+  contamination. Shorts sat at 22.6% while every long-form source was 97-100%.
+  Any estimate has to weight by traffic mix rather than use one flat average.
