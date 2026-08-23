@@ -1,9 +1,20 @@
 import json, os, sys, datetime, urllib.request, urllib.parse, urllib.error
 DATA_API="https://www.googleapis.com/youtube/v3"
 AN="https://youtubeanalytics.googleapis.com/v2/reports"
-c=json.load(open("/mnt/user-data/uploads/Boundless Content/Shared Files/credentials/youtube-oauth.json"))
-d=urllib.parse.urlencode({"client_id":c["client_id"],"client_secret":c["client_secret"],
- "refresh_token":c["refresh_token"],"grant_type":"refresh_token"}).encode()
+# Credentials come from the environment, same as poll.py. For a local run, point
+# CREDS_FILE at a youtube-oauth.json instead.
+_f = os.environ.get("CREDS_FILE")
+if _f:
+    c = json.load(open(_f))
+    creds = {"client_id": c["client_id"], "client_secret": c["client_secret"],
+             "refresh_token": c["refresh_token"]}
+else:
+    creds = {"client_id": os.environ.get("YT_CLIENT_ID"),
+             "client_secret": os.environ.get("YT_CLIENT_SECRET"),
+             "refresh_token": os.environ.get("YT_REFRESH_TOKEN")}
+    if not all(creds.values()):
+        sys.exit("set YT_CLIENT_ID / YT_CLIENT_SECRET / YT_REFRESH_TOKEN, or CREDS_FILE")
+d=urllib.parse.urlencode(dict(creds, grant_type="refresh_token")).encode()
 AT=json.load(urllib.request.urlopen(urllib.request.Request("https://oauth2.googleapis.com/token",d)))["access_token"]
 def get(url,p):
     u=url+"?"+urllib.parse.urlencode(p)
@@ -71,7 +82,7 @@ out={"label":LABEL,"captured_at":now.isoformat(timespec="seconds"),
  "channel_public":{k:int(v) for k,v in ch["statistics"].items() if str(v).isdigit()},
  "video_count":len(ids),"top_n":TOP_N,"public":public,"lifetime_analytics":life,
  "retention_curves":curves,"splits":splits}
-open("catalog_%s.json"%LABEL,"w").write(json.dumps(out,indent=1))
-print("\nWROTE catalog_%s.json"%LABEL)
+open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"data","catalog_%s.json"%LABEL),"w").write(json.dumps(out,indent=1))
+print("\nWROTE data/catalog_%s.json"%LABEL)
 print("total public views: {:,}".format(sum(v["viewCount"] for v in public.values())))
 print("curves:",len(curves),"| lifetime rows:",len(life))
