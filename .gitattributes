@@ -1,0 +1,9 @@
+# The probe appends to these every run. Git cannot auto-merge them line-wise by
+# default, which turns any local commit into a conflict. "union" is a built-in
+# merge driver that keeps both sides' lines, which is exactly right for
+# append-only logs.
+data/*.jsonl merge=union
+data/pulse.csv merge=union
+
+# Keep line endings sane across Windows and the Linux runner.
+* text=auto eol=lf

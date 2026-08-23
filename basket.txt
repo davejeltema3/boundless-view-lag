@@ -1,0 +1,24 @@
+# Channels to snapshot before and after the 2026-08-24 view-counting switch.
+# One channel ID per line. Lines starting with # are ignored.
+# Seeded from Dave's vidIQ competitor list plus his own channel.
+UCpOWnfbrnVjhdZ0OVgvTFpg
+UCg5WjzrwxRRUUDf7WHKPzsA
+UCxI3-49z98MUKF3wTVJ9nkg
+UCcTK6SjObSorSGysdvRvH-w
+UCsMlWJa3U9o0Hyy6hArCL_A
+UCghUKUzVfDNjKQhXN9qI-JA
+UC0ZXtEJ6D2vlv46g45dU5HA
+UCPv5nMdq1OpzvOWj2bJ10QQ
+UCb4XiEOeJulWu4WGhwnDqjw
+UCj8DGOv5P7Ngsh-telMG-pw
+UCpFE8BGxvDhBDYCvD1hpYWw
+UCCeXwLzVKZU7VW8qXis_UOQ
+UC-SdzZoO_daumtgsR9V07Pw
+UC-PaZZpjgJ61wkK9yKfpe8w
+UCn9_a-TE-rPiqvOFS3oqwOQ
+UCLMtjmKyB2ORHx2A06crsmQ
+UC72W4zVV4OOCQ8EhxTeWVJw
+UC-lHR3LT6g6CuKYcGtTDfkg
+UCu-hNaseRte-gR-jMOWInXg
+UCdrdo3Z6_GEqZ0XGNqMY9iQ
+UCKegeYEy0lJxpkjWRthaRMw

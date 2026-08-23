@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
  "ts": "2026-08-23T22:06:22+00:00",
+=======
+ "ts": "2026-08-23T22:45:44+00:00",
+>>>>>>> 86af76edcc2a5efa8a60245565d6e3aa5071cc74
  "channel_public": {
   "viewCount": 3897293,
   "subscriberCount": 77500,
@@ -586,7 +590,11 @@
   "2026-08-23"
  ],
  "latest_analytics_day": "2026-08-21",
+<<<<<<< HEAD
  "lag_hours": 46.11,
+=======
+ "lag_hours": 46.76,
+>>>>>>> 86af76edcc2a5efa8a60245565d6e3aa5071cc74
  "channel_days": {
   "2026-08-11": {
    "views": 7359,
@@ -2315,10 +2323,287 @@
    }
   }
  },
+<<<<<<< HEAD
  "_last_full": "2026-08-23T22:05:27+00:00",
  "_rates": [
   1636.36,
   2700.0,
   0.0
  ]
+=======
+ "videos_public": {
+  "Q5-kOGAdBmI": {
+   "title": "8 Things You Should NEVER Do AFTER Uploading a YouTube Video",
+   "publishedAt": "2025-07-15T14:00:44Z",
+   "viewCount": 595816,
+   "likeCount": 32318,
+   "commentCount": 6102
+  },
+  "JO2JSj3JU48": {
+   "title": "I Uploaded to YouTube Once a Week for a Year - Here's What I Learned",
+   "publishedAt": "2025-12-18T14:00:39Z",
+   "viewCount": 427019,
+   "likeCount": 18684,
+   "commentCount": 1353
+  },
+  "6p1S5zOPUF4": {
+   "title": "YouTube's New Update Just Changed Everything (It Changes Nothing)",
+   "publishedAt": "2026-08-19T14:00:16Z",
+   "viewCount": 18747,
+   "likeCount": 702,
+   "commentCount": 209
+  },
+  "vvNXOJUfg3I": {
+   "title": "12 Things you MUST do AFTER Uploading YouTube Videos to Get More Views",
+   "publishedAt": "2025-03-05T16:01:06Z",
+   "viewCount": 302158,
+   "likeCount": 22242,
+   "commentCount": 3378
+  },
+  "gRPJd1xSRyo": {
+   "title": "How to Survive Being a Small YouTube Channel (The Truth About Growth)",
+   "publishedAt": "2025-03-18T13:45:04Z",
+   "viewCount": 521794,
+   "likeCount": 35819,
+   "commentCount": 15588
+  }
+ },
+ "video_days": {
+  "Q5-kOGAdBmI": {
+   "2026-08-13": {
+    "views": 2051,
+    "engagedViews": 2051,
+    "avgViewPct": 35.74
+   },
+   "2026-08-14": {
+    "views": 2387,
+    "engagedViews": 2387,
+    "avgViewPct": 35.21
+   },
+   "2026-08-15": {
+    "views": 2148,
+    "engagedViews": 2145,
+    "avgViewPct": 35.07
+   },
+   "2026-08-16": {
+    "views": 2216,
+    "engagedViews": 2214,
+    "avgViewPct": 33.67
+   },
+   "2026-08-17": {
+    "views": 1984,
+    "engagedViews": 1979,
+    "avgViewPct": 35.22
+   },
+   "2026-08-18": {
+    "views": 1283,
+    "engagedViews": 1283,
+    "avgViewPct": 33.95
+   },
+   "2026-08-19": {
+    "views": 1228,
+    "engagedViews": 1209,
+    "avgViewPct": 36.56
+   },
+   "2026-08-20": {
+    "views": 976,
+    "engagedViews": 961,
+    "avgViewPct": 37.18
+   },
+   "2026-08-21": {
+    "views": 1275,
+    "engagedViews": 1252,
+    "avgViewPct": 34.53
+   }
+  },
+  "JO2JSj3JU48": {
+   "2026-08-13": {
+    "views": 1126,
+    "engagedViews": 1126,
+    "avgViewPct": 20.79
+   },
+   "2026-08-14": {
+    "views": 1005,
+    "engagedViews": 1005,
+    "avgViewPct": 18.32
+   },
+   "2026-08-15": {
+    "views": 952,
+    "engagedViews": 952,
+    "avgViewPct": 19.8
+   },
+   "2026-08-16": {
+    "views": 1111,
+    "engagedViews": 1111,
+    "avgViewPct": 20.69
+   },
+   "2026-08-17": {
+    "views": 2068,
+    "engagedViews": 2066,
+    "avgViewPct": 19.88
+   },
+   "2026-08-18": {
+    "views": 2301,
+    "engagedViews": 2301,
+    "avgViewPct": 17.45
+   },
+   "2026-08-19": {
+    "views": 2133,
+    "engagedViews": 2097,
+    "avgViewPct": 18.72
+   },
+   "2026-08-20": {
+    "views": 1897,
+    "engagedViews": 1866,
+    "avgViewPct": 18.38
+   },
+   "2026-08-21": {
+    "views": 1474,
+    "engagedViews": 1446,
+    "avgViewPct": 18.65
+   }
+  },
+  "6p1S5zOPUF4": {
+   "2026-08-13": {
+    "views": 0,
+    "engagedViews": 0,
+    "avgViewPct": 0
+   },
+   "2026-08-14": {
+    "views": 0,
+    "engagedViews": 0,
+    "avgViewPct": 0
+   },
+   "2026-08-15": {
+    "views": 0,
+    "engagedViews": 0,
+    "avgViewPct": 0
+   },
+   "2026-08-16": {
+    "views": 0,
+    "engagedViews": 0,
+    "avgViewPct": 0
+   },
+   "2026-08-17": {
+    "views": 0,
+    "engagedViews": 0,
+    "avgViewPct": 0
+   },
+   "2026-08-18": {
+    "views": 0,
+    "engagedViews": 0,
+    "avgViewPct": 0
+   },
+   "2026-08-19": {
+    "views": 6982,
+    "engagedViews": 6887,
+    "avgViewPct": 30.72
+   },
+   "2026-08-20": {
+    "views": 2207,
+    "engagedViews": 2194,
+    "avgViewPct": 23.42
+   },
+   "2026-08-21": {
+    "views": 4224,
+    "engagedViews": 4209,
+    "avgViewPct": 11.52
+   }
+  },
+  "vvNXOJUfg3I": {
+   "2026-08-13": {
+    "views": 510,
+    "engagedViews": 510,
+    "avgViewPct": 28.360000000000003
+   },
+   "2026-08-14": {
+    "views": 633,
+    "engagedViews": 633,
+    "avgViewPct": 26.83
+   },
+   "2026-08-15": {
+    "views": 585,
+    "engagedViews": 585,
+    "avgViewPct": 24.9
+   },
+   "2026-08-16": {
+    "views": 651,
+    "engagedViews": 651,
+    "avgViewPct": 24.6
+   },
+   "2026-08-17": {
+    "views": 540,
+    "engagedViews": 539,
+    "avgViewPct": 24.41
+   },
+   "2026-08-18": {
+    "views": 549,
+    "engagedViews": 549,
+    "avgViewPct": 26.009999999999998
+   },
+   "2026-08-19": {
+    "views": 537,
+    "engagedViews": 527,
+    "avgViewPct": 27.149999999999995
+   },
+   "2026-08-20": {
+    "views": 474,
+    "engagedViews": 468,
+    "avgViewPct": 28.65
+   },
+   "2026-08-21": {
+    "views": 386,
+    "engagedViews": 376,
+    "avgViewPct": 27.699999999999996
+   }
+  },
+  "gRPJd1xSRyo": {
+   "2026-08-13": {
+    "views": 382,
+    "engagedViews": 382,
+    "avgViewPct": 36.84
+   },
+   "2026-08-14": {
+    "views": 303,
+    "engagedViews": 303,
+    "avgViewPct": 37.94
+   },
+   "2026-08-15": {
+    "views": 331,
+    "engagedViews": 331,
+    "avgViewPct": 43.82
+   },
+   "2026-08-16": {
+    "views": 352,
+    "engagedViews": 352,
+    "avgViewPct": 43.78
+   },
+   "2026-08-17": {
+    "views": 337,
+    "engagedViews": 337,
+    "avgViewPct": 41.04
+   },
+   "2026-08-18": {
+    "views": 267,
+    "engagedViews": 266,
+    "avgViewPct": 41.09
+   },
+   "2026-08-19": {
+    "views": 365,
+    "engagedViews": 361,
+    "avgViewPct": 39.86
+   },
+   "2026-08-20": {
+    "views": 238,
+    "engagedViews": 237,
+    "avgViewPct": 43.16
+   },
+   "2026-08-21": {
+    "views": 293,
+    "engagedViews": 286,
+    "avgViewPct": 40.35
+   }
+  }
+ }
+>>>>>>> 86af76edcc2a5efa8a60245565d6e3aa5071cc74
 }
