@@ -1,0 +1,42 @@
+name: view-lag probe
+
+on:
+  schedule:
+    # every 15 minutes (UTC). GitHub's floor is 5 minutes: change to */5 to tighten.
+    - cron: "*/15 * * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: probe
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Poll
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          LOOKBACK_DAYS: "10"
+        run: python3 poll.py
+
+      - name: Commit log
+        run: |
+          git config user.name  "view-lag probe"
+          git config user.email "probe@users.noreply.github.com"
+          git add data/
+          git diff --staged --quiet && echo "nothing to commit" && exit 0
+          git commit -m "probe $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3; do
+            git pull --rebase --autostash && git push && exit 0
+            sleep 5
+          done
+          exit 1
