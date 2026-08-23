@@ -1,5 +1,5 @@
 {
- "ts": "2026-08-23T22:22:13+00:00",
+ "ts": "2026-08-23T22:45:44+00:00",
  "channel_public": {
   "viewCount": 3897293,
   "subscriberCount": 77500,
@@ -17,7 +17,7 @@
   "2026-08-23"
  ],
  "latest_analytics_day": "2026-08-21",
- "lag_hours": 46.37,
+ "lag_hours": 46.76,
  "channel_days": {
   "2026-08-13": {
    "views": 5519,
@@ -507,37 +507,37 @@
   "Q5-kOGAdBmI": {
    "title": "8 Things You Should NEVER Do AFTER Uploading a YouTube Video",
    "publishedAt": "2025-07-15T14:00:44Z",
-   "viewCount": 595773,
-   "likeCount": 32316,
+   "viewCount": 595816,
+   "likeCount": 32318,
    "commentCount": 6102
   },
   "JO2JSj3JU48": {
    "title": "I Uploaded to YouTube Once a Week for a Year - Here's What I Learned",
    "publishedAt": "2025-12-18T14:00:39Z",
-   "viewCount": 426985,
-   "likeCount": 18683,
+   "viewCount": 427019,
+   "likeCount": 18684,
    "commentCount": 1353
   },
   "6p1S5zOPUF4": {
    "title": "YouTube's New Update Just Changed Everything (It Changes Nothing)",
    "publishedAt": "2026-08-19T14:00:16Z",
-   "viewCount": 18694,
-   "likeCount": 701,
+   "viewCount": 18747,
+   "likeCount": 702,
    "commentCount": 209
   },
   "vvNXOJUfg3I": {
    "title": "12 Things you MUST do AFTER Uploading YouTube Videos to Get More Views",
    "publishedAt": "2025-03-05T16:01:06Z",
-   "viewCount": 302145,
+   "viewCount": 302158,
    "likeCount": 22242,
    "commentCount": 3378
   },
   "gRPJd1xSRyo": {
    "title": "How to Survive Being a Small YouTube Channel (The Truth About Growth)",
    "publishedAt": "2025-03-18T13:45:04Z",
-   "viewCount": 521781,
+   "viewCount": 521794,
    "likeCount": 35819,
-   "commentCount": 15587
+   "commentCount": 15588
   }
  },
  "video_days": {
