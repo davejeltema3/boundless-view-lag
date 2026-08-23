@@ -30,6 +30,7 @@ DATA = os.path.join(ROOT, "data")
 SNAPSHOTS = os.path.join(DATA, "snapshots.jsonl")
 CHANGES = os.path.join(DATA, "changes.jsonl")
 STATE = os.path.join(DATA, "state.json")
+RETENTION = os.path.join(DATA, "retention.jsonl")
 
 DRY = os.environ.get("DRY_RUN") == "1"
 LOOKBACK = int(os.environ.get("LOOKBACK_DAYS", "10"))
@@ -48,10 +49,17 @@ def http(url, data=None, headers=None):
     req = urllib.request.Request(url, data=data, headers=headers or {})
     try:
         with urllib.request.urlopen(req, timeout=45) as r:
-            return json.load(r)
+            raw = r.read()
     except urllib.error.HTTPError as e:
         body = e.read().decode()[:800]
         die("HTTP %s on %s\n%s" % (e.code, url.split("?")[0], body))
+    # Discord webhooks answer 204 with an empty body. Google always sends JSON.
+    if not raw:
+        return {}
+    try:
+        return json.loads(raw)
+    except ValueError:
+        return {"raw": raw.decode("utf-8", "replace")[:500]}
 
 
 def access_token():
@@ -126,22 +134,35 @@ def snapshot(token):
             }
 
     # --- analytics day series, channel level ---
+    # averageViewPercentage matters here beyond curiosity: if YouTube recomputes
+    # retention against the new first-frame view count, every retention number on
+    # the platform drops on 2026-08-24 without any video changing. This catches it.
     ch_days = {}
-    for row in analytics(token, "views,engagedViews,estimatedMinutesWatched,averageViewDuration",
+    for row in analytics(token,
+                         "views,engagedViews,estimatedMinutesWatched,"
+                         "averageViewDuration,averageViewPercentage",
                          "day", start, end, sort="day"):
         ch_days[row[0]] = {
-            "views": row[1], "engagedViews": row[2],
-            "minutes": row[3], "avgDuration": row[4],
+            "views": row[1], "engagedViews": row[2], "minutes": row[3],
+            "avgDuration": row[4], "avgViewPct": row[5],
         }
 
     # --- analytics day series, per video ---
     vid_days = {}
     for vid in vids:
         d = {}
-        for row in analytics(token, "views,engagedViews", "day", start, end,
-                             filters="video==" + vid, sort="day"):
-            d[row[0]] = {"views": row[1], "engagedViews": row[2]}
+        for row in analytics(token, "views,engagedViews,averageViewPercentage",
+                             "day", start, end, filters="video==" + vid, sort="day"):
+            d[row[0]] = {"views": row[1], "engagedViews": row[2], "avgViewPct": row[3]}
         vid_days[vid] = d
+
+    # --- day x traffic source, channel level ---
+    # The real-time estimate is only as good as the mix model. Ratios differ hard
+    # by source, so hold them per source per day rather than one blended number.
+    traffic_days = {}
+    for row in analytics(token, "views,engagedViews", "day,insightTrafficSourceType",
+                         start, end, sort="day"):
+        traffic_days.setdefault(row[0], {})[row[1]] = {"views": row[2], "engagedViews": row[3]}
 
     latest = max(ch_days) if ch_days else None
     lag_hours = None
@@ -157,12 +178,28 @@ def snapshot(token):
             "subscriberCount": int(ch_stats.get("subscriberCount", 0)),
             "videoCount": int(ch_stats.get("videoCount", 0)),
         },
+        "tracked_vids": vids,
+        "range": [start, end],
         "latest_analytics_day": latest,
         "lag_hours": lag_hours,
         "channel_days": ch_days,
+        "traffic_days": traffic_days,
         "videos_public": vpub,
         "video_days": vid_days,
     }
+
+
+def retention_curves(token, vids, start, end):
+    """100-bucket retention curve per video. For a 15-minute video each bucket is
+    about 9 seconds, so bucket 1 is the closest API proxy for 'did they stay past
+    the opening'. Shorter videos give finer resolution."""
+    out = {}
+    for vid in vids:
+        rows = analytics(token, "audienceWatchRatio,relativeRetentionPerformance",
+                         "elapsedVideoTimeRatio", start, end, filters="video==" + vid)
+        if rows:
+            out[vid] = [[round(r[0], 2), round(r[1], 4), round(r[2], 4)] for r in rows]
+    return out
 
 
 def fmt(n):
@@ -199,20 +236,44 @@ def diff(prev, cur):
 
 
 def post_discord(lines, cur):
+    """Post as Hazel, matching the embed style of the other #dashboard alerts."""
     url = os.environ.get("DISCORD_WEBHOOK_URL")
     if not url or not lines:
         return
-    head = "**engaged-views probe** `%s`" % cur["ts"]
+
+    headline = lines[0]
+    if headline.startswith("NEW DAY"):
+        event, color = "New day appeared", 0x22c55e
+    elif headline.startswith("REVISED"):
+        event, color = "Day revised", 0xf59e0b
+    else:
+        event, color = "Baseline captured", 0x8b5cf6
+
     body = "\n".join("- " + l for l in lines[:15])
-    payload = json.dumps({"content": (head + "\n" + body)[:1900]}).encode()
+    if len(lines) > 15:
+        body += "\n- ...and %d more" % (len(lines) - 15)
+
+    embed = {
+        "title": "\U0001f4c9 Engaged Views Probe",
+        "description": body[:3800],
+        "color": color,
+        "fields": [
+            {"name": "Event", "value": event, "inline": True},
+            {"name": "Latest day", "value": str(cur.get("latest_analytics_day")), "inline": True},
+            {"name": "Lag", "value": "%sh" % cur.get("lag_hours"), "inline": True},
+            {"name": "Public views (live)", "value": fmt(cur["channel_public"]["viewCount"]), "inline": True},
+        ],
+        "footer": {"text": "boundless-view-lag"},
+        "timestamp": cur["ts"],
+    }
     try:
         # Discord's edge rejects the default urllib User-Agent with a 403.
-        http(url, data=payload, headers={
+        http(url, data=json.dumps({"embeds": [embed]}).encode(), headers={
             "Content-Type": "application/json",
             "User-Agent": "boundless-view-lag/1.0 (+github actions probe)",
         })
-    except SystemExit:
-        print("discord post failed, continuing", file=sys.stderr)
+    except Exception as exc:  # never let a failed ping kill the run
+        print("discord post failed (%s), continuing" % exc, file=sys.stderr)
 
 
 def main():
@@ -241,6 +302,17 @@ def main():
     os.makedirs(DATA, exist_ok=True)
     with open(SNAPSHOTS, "a") as f:
         f.write(json.dumps(cur) + "\n")
+
+    # Retention curves are 100 rows per video, so only grab them when the
+    # underlying data actually moved to a new day (or on the very first run).
+    if any(l.startswith(("NEW DAY", "first run")) for l in lines):
+        start, end = cur["range"]
+        curves = retention_curves(token, cur["tracked_vids"], start, end)
+        if curves:
+            with open(RETENTION, "a") as f:
+                f.write(json.dumps({"ts": cur["ts"], "day": cur["latest_analytics_day"],
+                                    "curves": curves}) + "\n")
+            print("  captured retention curves for %d videos" % len(curves))
     if lines:
         with open(CHANGES, "a") as f:
             f.write(json.dumps({"ts": cur["ts"], "changes": lines}) + "\n")

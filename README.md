@@ -15,11 +15,21 @@ Every 15 minutes:
 1. Refreshes an OAuth access token.
 2. Reads public counters from the Data API (channel views/subs, plus
    views/likes/comments for the 5 videos with the most traffic in the window).
-3. Reads a day-level series from the Analytics API: `views`, `engagedViews`,
-   `estimatedMinutesWatched`, `averageViewDuration`, at channel level and per video.
+3. Reads day-level series from the Analytics API: `views`, `engagedViews`,
+   `estimatedMinutesWatched`, `averageViewDuration` and `averageViewPercentage`,
+   at channel level and per video, plus `views`/`engagedViews` split by
+   `day x insightTrafficSourceType`.
+   On a new-day event it also captures the 100-bucket retention curve
+   (`audienceWatchRatio` by `elapsedVideoTimeRatio`) for each tracked video into
+   `data/retention.jsonl`.
 4. Diffs against the previous run.
 5. Appends the snapshot to `data/snapshots.jsonl`, and if anything moved, appends
-   to `data/changes.jsonl` and pings Discord.
+   to `data/changes.jsonl` and posts to Discord.
+
+Alerts post through Hazel's own webhook, so they land in `#dashboard` styled like
+the payment and refund alerts rather than as a separate bot. That webhook is
+shared with `bcp-program`'s `DISCORD_WEBHOOK_URL`, so regenerating it in Discord
+breaks both.
 
 Two kinds of change matter:
 
@@ -37,7 +47,7 @@ Repo secrets (Settings > Secrets and variables > Actions):
 | `YT_CLIENT_ID` | `youtube-oauth.json` |
 | `YT_CLIENT_SECRET` | `youtube-oauth.json` |
 | `YT_REFRESH_TOKEN` | `youtube-oauth.json` |
-| `DISCORD_WEBHOOK_URL` | channel webhook, optional |
+| `DISCORD_WEBHOOK_URL` | `view-lag-probe-webhook.json`, optional |
 
 The refresh token already carries both `youtube.force-ssl` and
 `yt-analytics.readonly`, so no new consent is needed.
@@ -60,6 +70,23 @@ DRY_RUN=1 python3 poll.py
 ```
 
 No dependencies. Standard library only.
+
+## Why these extra metrics
+
+`averageViewPercentage` is here for a specific reason. Retention is a ratio, and
+its denominator is "people who viewed". If YouTube recomputes retention against
+the new first-frame view count, every retention graph on the platform drops on
+2026-08-24 without a single video changing. Logging it daily catches that.
+
+The traffic-source split is there because engaged ratios differ hard by source.
+On this channel today, Shorts traffic sits at 22.6% while every long-form source
+is 97-100%, and the channel-level average is a blend of the two. Any real-time
+estimate has to weight by mix rather than apply one flat number.
+
+The retention curves are the closest available proxy for the sub-30-second
+dropoff, which is what an engaged view actually measures. Bucket resolution is
+1% of video length, so a 15-minute video gives ~9-second buckets and a 5-minute
+video gives ~3-second buckets. Shorter videos calibrate better.
 
 ## Known limits
 
