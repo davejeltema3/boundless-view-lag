@@ -328,9 +328,18 @@ def main():
 
     prev, rates = None, []
     if os.path.exists(STATE):
-        with open(STATE) as f:
-            prev = json.load(f)
-        rates = prev.get("_rates", [])
+        # A corrupt state file must never kill the probe. A merge that leaves
+        # conflict markers in here once cost us every run until someone noticed,
+        # because the crash happened before anything was logged. Treat an
+        # unreadable state as a first run and carry on.
+        try:
+            with open(STATE) as f:
+                prev = json.load(f)
+            rates = prev.get("_rates", [])
+        except (ValueError, OSError) as exc:
+            print("state.json unreadable (%s) -- treating as first run" % exc,
+                  file=sys.stderr)
+            prev, rates = None, []
 
     lines = diff(prev, cur, rates)
 

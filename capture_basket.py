@@ -90,7 +90,12 @@ def resolve(entry):
 
 def main():
     now = datetime.datetime.now(datetime.timezone.utc)
-    raw = [l.strip() for l in open(BASKET) if l.strip() and not l.startswith("#")]
+    # Strip inline comments so "UCxxxx  # Channel Name | 1,234 subs" works.
+    raw = []
+    for line in open(BASKET, encoding="utf-8"):
+        entry = line.split("#")[0].strip()
+        if entry:
+            raw.append(entry)
     ids, unresolved, source = [], [], {}
     for entry in raw:
         cid = resolve(entry)
