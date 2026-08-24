@@ -3,7 +3,12 @@
 # merge driver that keeps both sides' lines, which is exactly right for
 # append-only logs.
 data/*.jsonl merge=union
-data/pulse.csv merge=union
+data/*.csv   merge=union
 
-# Keep line endings sane across Windows and the Linux runner.
-* text=auto eol=lf
+# Line endings, scoped to source files only. Deliberately NOT "* text=auto",
+# because that would renormalise the large captured JSON files and produce a
+# huge meaningless diff.
+*.py  text eol=lf
+*.yml text eol=lf
+*.md  text eol=lf
+*.txt text eol=lf

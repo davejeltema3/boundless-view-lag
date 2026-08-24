@@ -39,11 +39,22 @@ RETENTION = os.path.join(DATA, "retention.jsonl")
 STATE = os.path.join(DATA, "state.json")
 CATALOG_PRE = os.path.join(DATA, "catalog_pre.json")
 PULSE = os.path.join(DATA, "pulse.csv")
+TICKS = os.path.join(DATA, "ticks.csv")
 
 # Full snapshots are ~9KB. At 5-minute cadence that is 2.6MB/day into git, so the
 # heavy record is written hourly or on any change, while a one-line pulse row goes
 # down every single run. The pulse is what the rate analysis actually needs.
 FULL_SNAPSHOT_EVERY_MIN = 60
+
+# GitHub throttles */5 schedules hard -- observed roughly one run per hour. So a
+# run no longer polls once and exits: it holds the runner and samples on its own
+# clock until the window closes. A tick is a single channels.list call, 1 quota
+# unit, which keeps 1-minute resolution affordable (1,440 units/day).
+# Silence used to be ambiguous: no alert meant either nothing moved or the probe
+# was dead. Twice it was dead. A heartbeat makes the difference visible.
+HEARTBEAT_HOURS = float(os.environ.get("HEARTBEAT_HOURS", "6"))
+LOOP_MINUTES = int(os.environ.get("LOOP_MINUTES", "0"))
+TICK_SECONDS = int(os.environ.get("TICK_SECONDS", "60"))
 
 DRY = os.environ.get("DRY_RUN") == "1"
 LOOKBACK = int(os.environ.get("LOOKBACK_DAYS", "12"))
@@ -228,6 +239,39 @@ def snapshot(token):
     }
 
 
+def tick_ids(public):
+    """The 50 videos carrying current traffic: the 35 newest plus the 15 biggest.
+    `public` is built by walking the uploads playlist, which is newest-first, and
+    dicts keep insertion order, so the leading keys are the recent uploads.
+    One videos.list call covers 50 ids for a single quota unit."""
+    keys = list(public)
+    newest = keys[:35]
+    biggest = sorted(keys, key=lambda v: -public[v][0])[:15]
+    out = []
+    for v in newest + biggest:
+        if v not in out:
+            out.append(v)
+    return out[:50]
+
+
+def tick(token, ids):
+    """One quota unit. The channel-level aggregate is cached and can sit still for
+    minutes, so this sums a fixed set of videos instead -- that number moves within
+    seconds and is what actually reveals a step change in counting."""
+    total = 0
+    for it in get(DATA_API + "/videos",
+                  {"part": "statistics", "id": ",".join(ids)}, token).get("items", []):
+        total += int(it["statistics"].get("viewCount", 0))
+    if not os.path.exists(TICKS):
+        with open(TICKS, "w") as f:
+            f.write("ts,tracked50_views,n_videos\n")
+    with open(TICKS, "a") as f:
+        f.write("%s,%d,%d\n" % (
+            datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
+            total, len(ids)))
+    return total
+
+
 def fmt(n):
     return "{:,}".format(n)
 
@@ -285,7 +329,9 @@ def post_discord(lines, cur):
     if not url or not lines:
         return
     head = lines[0]
-    if head.startswith("RATE JUMP"):
+    if head.startswith("still alive"):
+        event, color = "Heartbeat", 0x64748b
+    elif head.startswith("RATE JUMP"):
         event, color = "Public view rate jumped", 0xef4444
     elif head.startswith("NEW DAY"):
         event, color = "New day appeared", 0x22c55e
@@ -320,6 +366,32 @@ def post_discord(lines, cur):
         })
     except Exception as exc:
         print("discord post failed (%s), continuing" % exc, file=sys.stderr)
+
+
+def hold_and_tick(token, ids, minutes, every):
+    """Keep the runner and sample cheaply until the window closes.
+
+    Commits happen after the job ends, so a long hold trades commit frequency for
+    sample frequency. That is the right trade here: the switch is a step change in
+    views/hour, and resolution is what pins down when it happened."""
+    import time
+    end = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=minutes)
+    n, last, jumped = 0, None, False
+    while datetime.datetime.now(datetime.timezone.utc) < end:
+        time.sleep(every)
+        try:
+            v = tick(token, ids)
+        except SystemExit:
+            print("  tick failed, continuing", file=sys.stderr)
+            continue
+        n += 1
+        if last is not None:
+            rate = (v - last) * 3600.0 / every
+            if n % 10 == 0:
+                print("  tick %d: %s views, %.0f/hr" % (n, fmt(v), rate), flush=True)
+        last = v
+    print("  held %d min, %d ticks" % (minutes, n))
+    return n
 
 
 def main():
@@ -402,10 +474,32 @@ def main():
         with open(CHANGES, "a") as f:
             f.write(json.dumps({"ts": cur["ts"], "changes": lines}) + "\n")
         post_discord(lines, cur)
+        cur["_last_ping"] = cur["ts"]
+    else:
+        last_ping = (prev or {}).get("_last_ping")
+        due = True
+        if last_ping:
+            age = (datetime.datetime.fromisoformat(cur["ts"])
+                   - datetime.datetime.fromisoformat(last_ping)).total_seconds() / 3600.0
+            due = age >= HEARTBEAT_HOURS
+        if due:
+            post_discord(["still alive, nothing moved. latest analytics day %s, "
+                          "lag %sh, catalog %s views"
+                          % (cur["latest_analytics_day"], cur["lag_hours"],
+                             fmt(cur["catalog_views"]))], cur)
+            cur["_last_ping"] = cur["ts"]
+        else:
+            cur["_last_ping"] = last_ping
 
     cur["_rates"] = [round(r, 2) for r in rates]
     with open(STATE, "w") as f:
         json.dump(cur, f, indent=1)
+
+    if LOOP_MINUTES > 0:
+        ids = tick_ids(cur["public"])
+        print("holding %d min, ticking every %ds over %d videos"
+              % (LOOP_MINUTES, TICK_SECONDS, len(ids)))
+        hold_and_tick(token, ids, LOOP_MINUTES, TICK_SECONDS)
 
 
 if __name__ == "__main__":
