@@ -2,18 +2,15 @@ name: view-lag probe
 
 on:
   schedule:
-    # GitHub throttles and silently drops scheduled runs, and */5 gets dropped
-    # hardest -- observed roughly one run per hour, not twelve. So the schedule is
-    # now just a restart trigger: each run HOLDS the runner for 50 minutes and
-    # samples on its own clock. The concurrency group keeps at most one run and
-    # one pending run, so a finished hold is picked straight up by the next
-    # trigger and coverage stays continuous.
+    # Only a restart trigger. GitHub drops most */5 fires, so the run itself holds
+    # the runner and works on its own clock. Longer holds mean fewer restarts are
+    # needed, which is what closes the coverage gaps.
     - cron: "*/5 * * * *"
   workflow_dispatch:
     inputs:
       loop_minutes:
         description: "Minutes to hold and tick (0 = single poll)"
-        default: "50"
+        default: "170"
       tick_seconds:
         description: "Seconds between ticks"
         default: "60"
@@ -28,7 +25,7 @@ permissions:
 jobs:
   poll:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 190
     steps:
       - uses: actions/checkout@v5
 
@@ -40,21 +37,33 @@ jobs:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           LOOKBACK_DAYS: "12"
           TOP_N: "20"
-          LOOP_MINUTES: ${{ github.event.inputs.loop_minutes || '50' }}
+          LOOP_MINUTES: ${{ github.event.inputs.loop_minutes || '170' }}
           TICK_SECONDS: ${{ github.event.inputs.tick_seconds || '60' }}
         run: python3 poll.py
 
-      # always() so a cancelled or failed run still commits the ticks it collected
+      # always(), so a cancelled or crashed run still lands the ticks it collected
       - name: Commit log
         if: always()
         run: |
+          set +e
           git config user.name  "view-lag probe"
           git config user.email "probe@users.noreply.github.com"
+          # Enables "merge=ours" from .gitattributes for data/state.json, which is
+          # rewritten whole every run and is the only file that cannot union-merge.
+          git config merge.ours.driver true
+
           git add data/
-          git diff --staged --quiet && echo "nothing to commit" && exit 0
-          git commit -m "probe $(date -u +%Y-%m-%dT%H:%MZ)"
-          for i in 1 2 3 4 5; do
-            git pull --rebase --autostash && git push && exit 0
-            sleep 5
+          if git diff --staged --quiet; then echo "nothing to commit"; exit 0; fi
+          git commit -m "probe $(date -u +%Y-%m-%dT%H:%MZ)" || exit 0
+
+          for i in 1 2 3 4 5 6; do
+            # A failed rebase leaves the repo mid-rebase, and every later retry
+            # then fails instantly against that same stuck state. Clear it first.
+            git rebase --abort  >/dev/null 2>&1
+            git merge  --abort  >/dev/null 2>&1
+            git pull --rebase --autostash && git push && echo "pushed on try $i" && exit 0
+            echo "push attempt $i failed, retrying"
+            sleep $((i * 5))
           done
+          echo "::error::could not push after 6 attempts"
           exit 1

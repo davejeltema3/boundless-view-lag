@@ -27,6 +27,7 @@ import os
 import sys
 import datetime
 import statistics
+import time
 import urllib.request
 import urllib.parse
 import urllib.error
@@ -78,11 +79,20 @@ def die(msg):
 
 def http(url, data=None, headers=None):
     req = urllib.request.Request(url, data=data, headers=headers or {})
-    try:
-        with urllib.request.urlopen(req, timeout=45) as r:
-            raw = r.read()
-    except urllib.error.HTTPError as e:
-        die("HTTP %s on %s\n%s" % (e.code, url.split("?")[0], e.read().decode()[:800]))
+    raw = None
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(req, timeout=45) as r:
+                raw = r.read()
+            break
+        except urllib.error.HTTPError as e:
+            die("HTTP %s on %s\n%s" % (e.code, url.split("?")[0], e.read().decode()[:800]))
+        except Exception as exc:
+            # A transient network blip must not end a run that holds for hours.
+            if attempt == 2:
+                die("network error on %s after 3 tries: %s"
+                    % (url.split("?")[0], exc))
+            time.sleep(2 * (attempt + 1))
     # Discord webhooks answer 204 with an empty body. Google always sends JSON.
     if not raw:
         return {}
@@ -199,7 +209,11 @@ def snapshot(token):
                          "averageViewDuration,averageViewPercentage",
                          "day", start, end, sort="day"):
         ch_days[row[0]] = {"views": row[1], "engagedViews": row[2], "minutes": row[3],
-                           "avgDuration": row[4], "avgViewPct": row[5]}
+                           "avgDuration": row[4],
+                           # The API returns 28.45 but float round-tripping stores
+                           # it as 28.449999999999996, which read as a change on
+                           # every run and spammed Discord forever.
+                           "avgViewPct": round(row[5], 2)}
 
     # --- day x video for all tracked videos, in ONE call ---
     vid_days = {}
@@ -208,7 +222,8 @@ def snapshot(token):
                              "day,video", start, end,
                              filters="video==" + ",".join(vids), sort="day", maxr=500):
             vid_days.setdefault(row[1], {})[row[0]] = {
-                "views": row[2], "engagedViews": row[3], "avgViewPct": row[4]}
+                "views": row[2], "engagedViews": row[3],
+                "avgViewPct": round(row[4], 2)}
 
     # --- day x traffic source ---
     traffic_days = {}
@@ -305,7 +320,7 @@ def diff(prev, cur, rates):
                 out.append("REVISED %s %s: %s -> %s (%+d)"
                            % (d, k, fmt(old.get(k, 0)), fmt(row.get(k, 0)),
                               row.get(k, 0) - old.get(k, 0)))
-        if old.get("avgViewPct") != row.get("avgViewPct"):
+        if round(old.get("avgViewPct") or 0, 2) != round(row.get("avgViewPct") or 0, 2):
             out.append("REVISED %s avgViewPct: %s -> %s"
                        % (d, old.get("avgViewPct"), row.get("avgViewPct")))
 
@@ -368,17 +383,31 @@ def post_discord(lines, cur):
         print("discord post failed (%s), continuing" % exc, file=sys.stderr)
 
 
-def hold_and_tick(token, ids, minutes, every):
+def hold_and_tick(token, ids, minutes, every, refresh_after_min=45):
+    """Long holds outlive their credentials.
+
+    An OAuth access token is good for 3600 seconds. A hold longer than that starts
+    401ing partway through, so the token is refreshed on a timer rather than being
+    grabbed once at the top of the run."""
+
     """Keep the runner and sample cheaply until the window closes.
 
     Commits happen after the job ends, so a long hold trades commit frequency for
     sample frequency. That is the right trade here: the switch is a step change in
     views/hour, and resolution is what pins down when it happened."""
-    import time
     end = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=minutes)
-    n, last, jumped = 0, None, False
+    token_at = datetime.datetime.now(datetime.timezone.utc)
+    n, last = 0, None
     while datetime.datetime.now(datetime.timezone.utc) < end:
         time.sleep(every)
+        now = datetime.datetime.now(datetime.timezone.utc)
+        if (now - token_at).total_seconds() > refresh_after_min * 60:
+            try:
+                token = access_token()
+                token_at = now
+                print("  token refreshed", flush=True)
+            except SystemExit:
+                print("  token refresh failed, will retry", file=sys.stderr)
         try:
             v = tick(token, ids)
         except SystemExit:

@@ -1,13 +1,17 @@
 # The probe appends to these every run. Git cannot auto-merge them line-wise by
-# default, which turns any local commit into a conflict. "union" is a built-in
-# merge driver that keeps both sides' lines, which is exactly right for
-# append-only logs.
+# default, which turns any concurrent write into a conflict. "union" is a built-in
+# driver that keeps both sides' lines, exactly right for append-only logs.
 data/*.jsonl merge=union
 data/*.csv   merge=union
 
+# state.json is rewritten whole every run, so it can never union-merge. Either
+# side is fine because the next run regenerates it, and a stuck conflict here was
+# blocking the push and failing the job. The "ours" driver is enabled in the
+# workflow with: git config merge.ours.driver true
+data/state.json merge=ours
+
 # Line endings, scoped to source files only. Deliberately NOT "* text=auto",
-# because that would renormalise the large captured JSON files and produce a
-# huge meaningless diff.
+# which would renormalise the large captured JSON files into a huge useless diff.
 *.py  text eol=lf
 *.yml text eol=lf
 *.md  text eol=lf
