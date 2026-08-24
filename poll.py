@@ -33,7 +33,10 @@ import urllib.parse
 import urllib.error
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-DATA = os.path.join(ROOT, "data")
+# DATA_DIR lets a local test run write somewhere harmless. Without it, every
+# manual run dirties the repo's data/ folder, which then has to be discarded by
+# hand before committing, and worse, can collide with what the workflow writes.
+DATA = os.environ.get("DATA_DIR") or os.path.join(ROOT, "data")
 SNAPSHOTS = os.path.join(DATA, "snapshots.jsonl")
 CHANGES = os.path.join(DATA, "changes.jsonl")
 RETENTION = os.path.join(DATA, "retention.jsonl")
@@ -528,7 +531,19 @@ def main():
         ids = tick_ids(cur["public"])
         print("holding %d min, ticking every %ds over %d videos"
               % (LOOP_MINUTES, TICK_SECONDS, len(ids)))
-        hold_and_tick(token, ids, LOOP_MINUTES, TICK_SECONDS)
+        # The ticks are already on disk and the commit step runs on always(), so
+        # an exception in here costs no data. Failing the job over it only
+        # produces an alert that means nothing. Log it loudly instead, and print
+        # a marker so a clean finish is distinguishable from a crash.
+        try:
+            hold_and_tick(token, ids, LOOP_MINUTES, TICK_SECONDS)
+        except Exception as exc:
+            import traceback
+            print("HOLD ABORTED: %r" % (exc,), file=sys.stderr)
+            traceback.print_exc()
+            print("ticks up to the failure are still on disk and will be committed")
+
+    print("RUN COMPLETE ok")
 
 
 if __name__ == "__main__":
