@@ -24,6 +24,7 @@ Env:
 
 import json
 import os
+import re
 import sys
 import datetime
 import statistics
@@ -42,6 +43,11 @@ CHANGES = os.path.join(DATA, "changes.jsonl")
 RETENTION = os.path.join(DATA, "retention.jsonl")
 STATE = os.path.join(DATA, "state.json")
 CATALOG_PRE = os.path.join(DATA, "catalog_pre.json")
+# Append-only record of what has already been announced. Lives in its own file
+# because state.json gets reverted whenever a merge conflict resolves, which is
+# what made the same NEW DAY alert fire twice and made revisions ping-pong
+# forever. This file union-merges and therefore never conflicts.
+ANNOUNCED = os.path.join(DATA, "announced.jsonl")
 PULSE = os.path.join(DATA, "pulse.csv")
 TICKS = os.path.join(DATA, "ticks.csv")
 
@@ -342,39 +348,141 @@ def diff(prev, cur, rates):
     return out
 
 
+def alert_key(line):
+    """A stable id for something we have already told Dave about.
+
+    Revisions are normalised so 8,896 -> 8,789 and 8,789 -> 8,896 share one key.
+    Without that, a reverting state file reports the same pair back and forth
+    forever, which is most of the Discord noise."""
+    if line.startswith("NEW DAY"):
+        return "newday:" + line.split()[2]
+    if line.startswith("REVISED"):
+        parts = line.split()
+        day, metric = parts[1], parts[2].rstrip(":")
+        # Only the values after the metric name. Scanning the whole line pulls
+        # digits out of the date and makes keys that could collide.
+        tail = line.split(":", 1)[1] if ":" in line else line
+        nums = sorted(int(x.replace(",", "")) for x in re.findall(r"[\d,]+", tail)
+                      if x.replace(",", "").isdigit())
+        if len(nums) >= 2:
+            return "rev:%s:%s:%d:%d" % (day, metric, nums[0], nums[-1])
+        return "rev:" + day + ":" + metric
+    return None
+
+
+def load_announced():
+    seen = set()
+    if os.path.exists(ANNOUNCED):
+        try:
+            for l in open(ANNOUNCED, encoding="utf-8"):
+                if l.strip():
+                    seen.add(json.loads(l)["k"])
+        except (ValueError, OSError):
+            pass
+    return seen
+
+
+def save_announced(keys, ts):
+    if not keys:
+        return
+    os.makedirs(DATA, exist_ok=True)
+    with open(ANNOUNCED, "a") as f:
+        for k in keys:
+            f.write(json.dumps({"ts": ts, "k": k}) + "\n")
+
+
+def humanise(lines, cur):
+    """Turn diff lines into something readable at a glance.
+
+    Returns (emoji, headline, body, colour, meaning)."""
+    new_days = [l for l in lines if l.startswith("NEW DAY")]
+    revs = [l for l in lines if l.startswith("REVISED")]
+    jumps = [l for l in lines if l.startswith("RATE JUMP")]
+    alive = [l for l in lines if l.startswith("still alive")]
+    first = [l for l in lines if l.startswith("first run")]
+
+    if jumps:
+        return ("\u26a1", "Public view rate jumped", jumps[0], 0xef4444,
+                "The public counter sped up sharply. This is the tripwire for a "
+                "change in how YouTube counts.")
+
+    if new_days:
+        l = new_days[0]
+        day = l.split()[2]
+        row = cur["channel_days"].get(day, {})
+        v, e = row.get("views", 0), row.get("engagedViews", 0)
+        pct = row.get("avgViewPct")
+        if not v:
+            # State can be stale or reverted, so read the numbers back out of the
+            # alert line rather than reporting zeros.
+            m = re.search(r"views ([\d,]+) / engaged ([\d,]+)", l)
+            if m:
+                v = int(m.group(1).replace(",", ""))
+                e = int(m.group(2).replace(",", ""))
+            m2 = re.search(r"avg view % ([\d.]+)", l)
+            if m2:
+                pct = float(m2.group(1))
+        gap = (100.0 * (v - e) / v) if v else 0.0
+        lag = cur.get("lag_hours")
+        body = ("**%s** is now available, %.0f hours after that day ended.\n\n"
+                "Views: **%s**\nEngaged views: **%s**\nGap: **%.2f%%**\n"
+                "Average view percentage: %s"
+                % (day, lag or 0, fmt(v), fmt(e), gap,
+                   ("%.1f%%" % pct) if pct is not None else "not reported"))
+        meaning = ("Out of every 100 views, about %.0f counted as engaged."
+                   % (100 - gap))
+        if revs:
+            body += "\n\n_%d earlier day%s also adjusted._" % (
+                len(revs), "" if len(revs) == 1 else "s")
+        return ("\U0001f4c5", "New day of data: " + day, body, 0x22c55e, meaning)
+
+    if revs:
+        biggest, size = revs[0], 0
+        for l in revs:
+            nums = [int(x.replace(",", "")) for x in re.findall(r"[\d,]+", l)
+                    if x.replace(",", "").isdigit()]
+            if len(nums) >= 2 and abs(nums[-1] - nums[-2]) > size:
+                size, biggest = abs(nums[-1] - nums[-2]), l
+        days = sorted({l.split()[1] for l in revs})
+        body = "%d earlier day%s changed: %s\n\n`%s`" % (
+            len(revs), "" if len(revs) == 1 else "s", ", ".join(days), biggest)
+        return ("\U0001f501", "Earlier numbers revised", body, 0xf59e0b,
+                "YouTube keeps adjusting past days for roughly five days. "
+                "Normal, but it means a single read is never final.")
+
+    if first:
+        return ("\U0001f195", "Baseline captured", first[0], 0x8b5cf6,
+                "Starting point recorded. Future alerts compare against this.")
+
+    if alive:
+        return ("\U0001f4a4", "Nothing new", alive[0], 0x64748b,
+                "The probe is running. No data moved since the last check.")
+
+    return ("\u2139", "Update", "\n".join(lines[:8]), 0x8b5cf6, "")
+
+
 def post_discord(lines, cur):
     url = os.environ.get("DISCORD_WEBHOOK_URL")
     if not url or not lines:
         return
-    head = lines[0]
-    if head.startswith("still alive"):
-        event, color = "Heartbeat", 0x64748b
-    elif head.startswith("RATE JUMP"):
-        event, color = "Public view rate jumped", 0xef4444
-    elif head.startswith("NEW DAY"):
-        event, color = "New day appeared", 0x22c55e
-    elif head.startswith("REVISED"):
-        event, color = "Day revised", 0xf59e0b
-    else:
-        event, color = "Baseline captured", 0x8b5cf6
-
-    body = "\n".join("- " + l for l in lines[:15])
-    if len(lines) > 15:
-        body += "\n- ...and %d more" % (len(lines) - 15)
-
+    emoji, headline, body, colour, meaning = humanise(lines, cur)
+    desc = body
+    if meaning:
+        desc += "\n\n> " + meaning
     embed = {
-        "title": "\U0001f4c9 Engaged Views Probe",
-        "description": body[:3800],
-        "color": color,
+        "title": "%s  %s" % (emoji, headline),
+        "description": desc[:3800],
+        "color": colour,
         "fields": [
-            {"name": "Event", "value": event, "inline": True},
-            {"name": "Latest day", "value": str(cur.get("latest_analytics_day")),
-             "inline": True},
-            {"name": "Lag", "value": "%sh" % cur.get("lag_hours"), "inline": True},
-            {"name": "Catalog views (live)", "value": fmt(cur["catalog_views"]),
-             "inline": True},
+            {"name": "Latest day of data", "value":
+                str(cur.get("latest_analytics_day")), "inline": True},
+            {"name": "How far behind", "value":
+                "%.0f hours" % (cur.get("lag_hours") or 0), "inline": True},
+            {"name": "Views right now", "value":
+                fmt(cur["catalog_views"]), "inline": True},
         ],
-        "footer": {"text": "boundless-view-lag"},
+        "footer": {"text": "view-lag probe  \u00b7  green = new day, "
+                           "amber = revision, red = rate jump, grey = all quiet"},
         "timestamp": cur["ts"],
     }
     try:
@@ -384,46 +492,6 @@ def post_discord(lines, cur):
         })
     except Exception as exc:
         print("discord post failed (%s), continuing" % exc, file=sys.stderr)
-
-
-def hold_and_tick(token, ids, minutes, every, refresh_after_min=45):
-    """Long holds outlive their credentials.
-
-    An OAuth access token is good for 3600 seconds. A hold longer than that starts
-    401ing partway through, so the token is refreshed on a timer rather than being
-    grabbed once at the top of the run."""
-
-    """Keep the runner and sample cheaply until the window closes.
-
-    Commits happen after the job ends, so a long hold trades commit frequency for
-    sample frequency. That is the right trade here: the switch is a step change in
-    views/hour, and resolution is what pins down when it happened."""
-    end = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=minutes)
-    token_at = datetime.datetime.now(datetime.timezone.utc)
-    n, last = 0, None
-    while datetime.datetime.now(datetime.timezone.utc) < end:
-        time.sleep(every)
-        now = datetime.datetime.now(datetime.timezone.utc)
-        if (now - token_at).total_seconds() > refresh_after_min * 60:
-            try:
-                token = access_token()
-                token_at = now
-                print("  token refreshed", flush=True)
-            except SystemExit:
-                print("  token refresh failed, will retry", file=sys.stderr)
-        try:
-            v = tick(token, ids)
-        except SystemExit:
-            print("  tick failed, continuing", file=sys.stderr)
-            continue
-        n += 1
-        if last is not None:
-            rate = (v - last) * 3600.0 / every
-            if n % 10 == 0:
-                print("  tick %d: %s views, %.0f/hr" % (n, fmt(v), rate), flush=True)
-        last = v
-    print("  held %d min, %d ticks" % (minutes, n))
-    return n
 
 
 def main():
@@ -446,6 +514,23 @@ def main():
             prev, rates = None, []
 
     lines = diff(prev, cur, rates)
+
+    # Drop anything already announced. Without this, a reverted state file
+    # re-reports the same NEW DAY and bounces the same revision back and forth.
+    seen = load_announced()
+    fresh_keys = []
+    kept = []
+    for l in lines:
+        k = alert_key(l)
+        if k is None:
+            kept.append(l)
+        elif k not in seen:
+            kept.append(l)
+            fresh_keys.append(k)
+    suppressed = len(lines) - len(kept)
+    if suppressed:
+        print("  suppressed %d already-announced alert(s)" % suppressed)
+    lines = kept
 
     # roll the rate history forward
     if prev:
@@ -506,6 +591,7 @@ def main():
         with open(CHANGES, "a") as f:
             f.write(json.dumps({"ts": cur["ts"], "changes": lines}) + "\n")
         post_discord(lines, cur)
+        save_announced(fresh_keys, cur["ts"])
         cur["_last_ping"] = cur["ts"]
     else:
         last_ping = (prev or {}).get("_last_ping")
