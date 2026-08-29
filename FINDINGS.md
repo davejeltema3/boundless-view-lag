@@ -1,52 +1,96 @@
 # What actually happened when YouTube changed how it counts views
 
-Measurements taken 2026-08-23 to 2026-08-28 on a YouTube channel of roughly
-77,500 subscribers: long-form, education niche, subscriber-heavy traffic.
+Measurements taken 2026-08-23 to 2026-08-29 on a YouTube channel of roughly
+77,800 subscribers: long-form, education niche, subscriber-heavy traffic.
 Raw data and the code that produced it are in this repository.
 
-Everything below is either **measured** on this channel, **inferred** from those
-measurements, or explicitly **not claimable**. The three are kept separate on
-purpose.
+Every figure below is either **measured**, **inferred** from those measurements,
+or explicitly **not claimable**. The three are kept separate on purpose.
+
+Full tables, source queries and a claims-to-evidence map: **[DATA.md](DATA.md)**.
+
+> **An earlier version of this document reached the opposite conclusion.** It was
+> written on 2026-08-28, when the newest available data was 2026-08-26, and it
+> reported the change as a 1.2% effect. That was wrong, because the switch had not
+> yet reached this channel on any of the days it examined. The correction is kept
+> visible rather than quietly edited, because being wrong that way is itself one
+> of the findings below. See section 4.
 
 ---
 
 ## Confirmed by measurement
 
-### 1. The gap opened, but it is small
-
-Engaged views as a share of views, by day:
+### 1. The change arrived three days late, and it is large
 
 ```
-PRE-CHANGE                      POST-CHANGE
-2026-08-19    0.09% gap         2026-08-24    1.22% gap
-2026-08-20    0.06% gap         2026-08-25    1.64% gap
-2026-08-21    0.06% gap
-2026-08-22    0.10% gap
-2026-08-23    0.26% gap
+day          views    engaged     gap      multiplier
+2026-08-22    8,098     8,090     0.10%      1.00x
+2026-08-23    8,197     8,100     1.18%      1.01x
+2026-08-24    6,470     6,391     1.22%      1.01x   <- the announced date
+2026-08-25    5,122     5,038     1.64%      1.02x
+2026-08-26    4,971     4,924     0.95%      1.01x
+2026-08-27    9,217     4,140    55.08%      2.23x   <- the actual switch
 ```
 
-Before the change, views and engaged views were the same number to within a
-tenth of a percent. After, the gap is roughly **1.2 to 1.6 percent**.
+YouTube announced 2026-08-24. On this channel, nothing happened on that date or
+for two days after. The switch landed on **2026-08-27**, and public views ran at
+**2.23x**, an increase of **123%**.
 
-So the effect is real and detectable, about **ten to twenty times larger** than
-the pre-change noise floor. It is also, in absolute terms, tiny. Out of every
-100 views, roughly 99 still count as engaged.
+### 2. The mechanism: it depends on where the video was playing
 
-### 2. Shorts and long-form are completely different stories
-
-Same channel, same window:
+This is the finding that explains everything else.
 
 ```
-long-form   11,501 views   11,366 engaged    1.17% gap
-Shorts      one video: 2,148 views, 707 engaged   67.1% gap
+playback location            pre-change    on 08-27    multiplier
+BROWSE (home / subs feed)      99.82%       17.99%       5.56x
+CHANNEL (channel page)         99.51%       35.14%       2.85x
+WATCH (the video page)         99.93%       71.95%       1.39x
+EMBEDDED (offsite players)    100.00%      100.00%       1.00x
 ```
 
-Shorts have been counted this way since 2025. Long-form just joined them, and
-barely moved. The two formats are not remotely comparable.
+**Feed views multiplied by 5.6x. Watch-page views by 1.4x. Embedded players did
+not change at all.**
 
-### 3. Engaged views arrive once a day, about two days late
+The same pattern by traffic source: subscriptions feed 2.78x and search 2.81x,
+against suggested video 1.08x, playlists 1.07x, end screens and external links
+1.00x.
 
-Every observed first appearance of a new day of data:
+### 3. Retention was not affected, and the arithmetic proves it
+
+A reasonable fear was that retention would collapse platform-wide, since it is a
+ratio with views in the denominator. It did not. Average view percentage went
+**up** slightly on the switch day, 28.10 to 28.30.
+
+On 2026-08-27 the channel logged 19,936 estimated minutes watched:
+
+```
+19,936 min / 4,140 engaged views = 289 seconds   <- matches the reported 286s
+19,936 min / 9,217 public views  = 130 seconds   <- does not match
+```
+
+**YouTube computes `averageViewDuration` and `averageViewPercentage` against
+engaged views, not against the inflated public count.** Anyone whose retention
+appears to have crashed is looking at something else.
+
+### 4. Reading this data early produces a wrong answer
+
+Days keep being revised for roughly five days after they first appear:
+
+```
+2026-08-19 views   12,812 -> 12,637   (-175, -1.4%)
+2026-08-21 views    8,896 ->  8,789   (-107, -1.2%)
+2026-08-22 views    8,163 ->  8,098    (-65, -0.8%)
+```
+
+Measured on 2026-08-24, the pre-change days appeared to carry gaps of 0.8 to
+1.4%. Settled, those same days read 0.06 to 0.26%.
+
+This is not an abstract caution. The first version of this document was built on
+data from before the switch reached this channel and concluded the effect was
+around 1.2%. The real figure is 55%. **Anyone who measured this change in its
+first days measured nothing.**
+
+### 5. Engaged views arrive once a day, 44 to 48 hours behind
 
 ```
 2026-08-22   appeared 08-24 20:11 UTC   44.2 hours behind
@@ -55,147 +99,94 @@ Every observed first appearance of a new day of data:
 2026-08-25   appeared 08-27 23:51 UTC   47.9 hours behind
 ```
 
-Once per day, consistently 44 to 48 hours after the day ends. There is no faster
-source: the API has no time dimension finer than `day`, Studio's realtime card
-shows views only and never engaged views, and the bulk Reporting API is slower.
+There is no faster source. The Analytics API has no time dimension finer than
+`day`, Studio's realtime card shows views only and never engaged views, and the
+bulk Reporting API is slower.
 
-### 4. Numbers keep changing for about five days after they land
+### 6. Nothing moved on the announced date
 
-Revisions the probe caught, on days that had already been reported:
+Hourly view rate on a fixed set of 47 videos, sampled every 60 seconds across
+2026-08-24 through 2026-08-26: normal daily rhythm, no step change. The step
+came on the 27th.
 
-```
-2026-08-19 views  12,812 -> 12,637   (-175)
-2026-08-21 views   8,896 ->  8,789   (-107)
-2026-08-22 views   8,163 ->  8,098    (-65)
-```
+### 7. Public view counts go down as well as up
 
-This matters more than it sounds. On 2026-08-24 the pre-change days appeared to
-have gaps of 0.8 to 1.4 percent. Once they settled, those same days read 0.06 to
-0.26 percent. **Reading the data early produced a wrong answer about the size of
-the change.** Anyone who measured this in the first days measured noise.
+At one-minute resolution the counter was observed dropping 18 views inside a
+single minute. That is the validation pass discarding low-quality playbacks,
+visible only at high sampling resolution.
 
-### 5. The public view counter did not visibly jump
+### 8. Two pipelines, and only one is live
 
-Hourly view rate across the switch, sampled every 60 seconds on a fixed set of
-50 videos:
+Studio's realtime card updates within minutes. The Content tab, Advanced mode and
+the API read a processed daily table roughly two days behind. Same platform,
+different plumbing. That gap is why the switch was visible in realtime on the
+27th but not confirmable until the 29th.
 
-```
-08-24 09h  180/hr      08-25 09h  149/hr      08-26 09h  180/hr
-08-24 13h  300/hr      08-25 13h  330/hr      08-26 13h  240/hr
-08-24 19h  660/hr      08-25 19h  240/hr      08-26 19h  240/hr
-08-24 23h  360/hr      08-25 23h  238/hr      08-26 23h  240/hr
-```
+### 9. The in-product notice arrived days late
 
-Normal daily rhythm, no step change. Whatever inflation happened was inside the
-1.4 percent, not a visible jump.
-
-### 6. Public view counts go down as well as up
-
-At one-minute resolution the counter was observed dropping:
-
-```
-19:34:56   3,430,832 -> 3,430,814   (-18 in under a minute)
-```
-
-That is YouTube's validation pass discarding low-quality playbacks in near real
-time. Invisible at normal resolution.
-
-### 7. Two pipelines, and only one is live
-
-The Studio dashboard's realtime card updates within minutes. The Content tab and
-Advanced mode read a processed daily table that runs about two days behind. Same
-platform, different plumbing. This is why the public number and the analytics
-number disagree at any given moment, and it is not a bug.
-
-### 8. Retention did not collapse
-
-A reasonable fear was that retention, being a ratio with views in the
-denominator, would fall platform-wide the moment views inflated. Average view
-percentage on this channel:
-
-```
-pre    17.94  18.00  18.03
-post   22.16  25.78
-```
-
-It went up, not down. No evidence of a retention recompute here.
-
-### 9. YouTube's in-product notice arrived days late
-
-The change took effect 2026-08-24. The banner in Studio saying "we updated how
-views are counted, so recent counts may be higher" appeared around 2026-08-27.
-Creators had three days of changed numbers before being told in the product.
+The Studio banner saying "we updated how views are counted, so recent counts may
+be higher" appeared around 2026-08-27, three days after the announced date and
+apparently the same day the change actually landed here.
 
 ---
 
 ## Reasonable inferences
 
-Supported by the measurements, but one step removed from them.
+Supported by the measurements, one step removed from them.
 
-- **The engaged threshold for long-form is very short.** If roughly 99 percent
-  of long-form views clear it, it cannot be anywhere near 30 seconds. YouTube
-  has only ever said "some amount of seconds." A few seconds fits the data.
+- **The inflation is autoplay previews being counted.** The surfaces that
+  multiplied are the ones where a video plays automatically as you scroll past.
+  The surfaces where a viewer deliberately clicks barely moved at all.
 
-- **The threshold was never the point. The act is.** Clicking a thumbnail is
-  deliberate. Being fed a Short and swiping is not. That difference, not the
-  number of seconds, is what makes the Shorts gap 67 percent and the long-form
-  gap 1 percent.
+- **There is no single number for "how much will my views go up."** It depends
+  entirely on traffic mix. A browse-and-search channel roughly triples. A channel
+  living on suggested video, playlists and external links sees almost nothing.
+  Per-video ratios on this channel span 21% to 95% on the same day.
 
-- **Most long-form channels will not see their numbers meaningfully inflate.**
-  If a channel's traffic is people choosing to click, its gap should look like
-  this one.
+- **A view now means materially less than it did**, on the surfaces where most
+  discovery happens. Not because viewers changed, but because a scroll-past now
+  counts the same as a click.
 
-- **Shorts-heavy channels are a different case entirely**, and any channel
-  reporting a big gap is probably reporting its Shorts.
+- **The rollout is staggered.** Nothing changed here on the announced date, then
+  everything changed three days later. Other channels may have switched on other
+  dates, which makes cross-channel comparisons over this window unreliable.
 
-- **"Your views are worth less now" is wrong for long-form.** A 1.4 percent
-  shift does not change what a view means.
-
-- **Any before-and-after comparison made inside about five days is unreliable**,
-  because the underlying numbers are still settling.
+- **A rate change measured across a boundary is a lower bound.** Live-counter
+  sampling on the 28th indicated +62%. The clean daily figure was +123%. The
+  sampling windows straddled the switch, dragging the estimate down.
 
 ---
 
 ## Cannot be claimed from this data
 
-State these as limits, not hedges.
-
-- **This is one channel.** Long-form, subscriber-heavy, education niche. A
-  browse-heavy or Shorts-heavy channel could look very different.
-- **The exact threshold in seconds is unknown.** The data bounds it as "short,"
-  not as a number.
-- **Two post-change days only**, and both are still inside the revision window,
-  so even 1.22 and 1.64 percent may move.
-- **Nothing about monetisation.** Earnings are based on engaged views, which did
-  not change definition, but no revenue effect was measured here.
-- **Nothing about other channels' engaged views.** That data is private to each
-  channel owner and cannot be obtained without their access.
-- **No claim about the future.** YouTube can tune the threshold whenever it
-  wants, and this measurement would not see it coming.
+- **One channel.** Long-form, education, subscriber-heavy. The mechanism should
+  generalise. The magnitude depends on a channel's own traffic mix.
+- **One post-change day** at full resolution.
+- **No other channel's engaged views.** That data is private to each owner.
+  Everything about other channels here is public view counts only.
+- **No monetisation effect measured.** Earnings are based on engaged views, which
+  did not change definition.
+- **No explanation for the three-day delay.** The rollout order is unknown.
+- **Not established as platform-wide.** Realtime graphs on other channels showed a
+  similar step on the same night, but without engaged-view access that is
+  suggestive, not proof.
 
 ---
 
-## What here is actually new
+## What here is new
 
 Not in YouTube's announcement, and not in the coverage:
 
-1. The measured size of the effect on a real channel: **0.1% to 1.4%**.
-2. The engaged-view lag: **once a day, 44 to 48 hours**, measured four times.
-3. The **five-day revision window**, and the fact that reading early gives a
-   wrong answer.
-4. The public counter showed **no step change** at the switch.
-5. **Retention did not drop**, contrary to a reasonable prediction.
-6. The Shorts versus long-form contrast, **quantified on one channel**: 67
-   percent against 1 percent.
-7. All of it sits on a **pre-change baseline captured on 2026-08-23**, committed
-   to a public repository before the change took effect: 110 videos, 21
-   reference channels, 30 further channels (anonymised), retention curves and
-   traffic splits.
-
-That last one is the part that cannot be reproduced after the fact. Anyone can
-describe the change now. Almost nobody can show what the numbers looked like the
-day before, with commit timestamps to prove it.
-
----
-
-*Raw data, code and commit history: this repository.*
+1. The change **did not take effect on the announced date** on this channel, and
+   there is a timestamped record of the days either side.
+2. The measured size: **2.23x, a 123% increase**, far above what was being
+   discussed.
+3. **The mechanism**, isolated by playback location: browse 5.6x against watch
+   page 1.4x and embedded 1.0x.
+4. **Retention was never affected**, proven by arithmetic rather than asserted.
+5. Engaged views run **44 to 48 hours behind**, measured four times.
+6. A **five-day revision window** that makes early measurement worthless, this
+   document's own first draft being the worked example.
+7. A **pre-change baseline captured 2026-08-23** and committed publicly before the
+   change took effect: 110 videos, two baskets of other channels, retention
+   curves and traffic splits.
