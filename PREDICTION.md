@@ -1,73 +1,82 @@
-# Two predictions, written before the data exists
+# Two predictions, and the result
 
-Written **2026-08-28, 05:45 UTC**. At this moment the YouTube Analytics API will
-only report through **2026-08-25**. The 26th, 27th and 28th do not exist in it
-yet and will not for roughly two more days.
+**Predictions written 2026-08-28 05:45 UTC. Result recorded 2026-08-29 21:00 UTC.**
 
-## The observation
+At the time the predictions were written, the YouTube Analytics API would only
+report through 2026-08-25. The 26th and 27th did not exist in it yet.
 
-Starting around **2026-08-27 03:21 UTC**, the live public view counter on the
-measured channel began running substantially faster, with no upload and nothing
-trending.
+---
+
+## RESULT: Prediction B was right about the date, and both predictions
+## underestimated the size
+
+```
+day          views    engaged     gap      multiplier
+2026-08-24    6,470     6,391     1.22%      1.01x
+2026-08-25    5,122     5,038     1.64%      1.02x
+2026-08-26    4,971     4,924     0.95%      1.01x
+2026-08-27    9,217     4,140    55.08%      2.23x     <-- the switch
+```
+
+The counting change did **not** take effect on this channel on 2026-08-24, the
+date YouTube announced. The days on either side of that date carry gaps of about
+1%, which is the noise floor. **The switch landed on 2026-08-27**, three days
+late, and public views on that day ran at **2.23x**, an increase of **123%**.
+
+- **Prediction A** (the conservative one: change landed on the 24th, gap settles
+  at 1.5 to 2.5%) is **wrong**.
+- **Prediction B** (the switch landed 2026-08-27, gap of 31 to 38%) is **right
+  about the date and low on the magnitude**. Actual: 55.08%.
+
+The 31 to 38% range was derived from a live-counter rate change measured across
+imperfect window boundaries. The true effect was larger than that measurement
+suggested.
+
+---
+
+## What the predictions said
+
+**Prediction A.** The 2026-08-24 switch landed as announced and its effect is
+small. Days 08-26 through 08-28 come in at a 1.5% to 2.5% gap. What the live
+counter showed was a genuine traffic surge.
+
+**Prediction B.** The public-view switch did not take effect on this channel
+until roughly 2026-08-27 03:21 UTC. When 08-27 and 08-28 land in Analytics they
+show a gap of roughly 31 to 38%, while 08-24 through 08-26 stay near 1.5%.
+
+## The observation the predictions were built on
 
 Measured from per-video cumulative counts on an identical basket of 110 videos:
 
 ```
 window 1   08-26 06:20 -> 08-27 03:21   21.0 h    4,448 views    212/hr
 window 2   08-27 03:21 -> 08-28 05:45   26.4 h    9,034 views    342/hr
-
-channel-wide change in hourly view rate:   +61.7%   (1.62x)
+                                        channel-wide  +61.7%   (1.62x)
 ```
 
-Cross-check: this basket recorded 13,482 views across the 48 hours, against
-14,051 on Studio's channel-level realtime card for the same period.
+Cross-checked against Studio's channel realtime card: 13,482 in this basket
+against 14,051 channel-wide over the same 48 hours.
 
-**The increase is broad-based, not one video trending:**
+The increase was broad-based rather than one video trending. Median 1.45x across
+20 videos, 12 up more than 25%, including videos published in 2023 that doubled
+in the same hour as everything else.
 
-```
-2.25x   5 Golden Rules of Game Cards Graphic Design   (published Sep 2023)
-2.17x   How to Survive Being a Small YouTube Channel  (Mar 2025)
-2.08x   8 Things You Should NEVER Do AFTER Uploading  (Jul 2025)
-1.92x   10 Steps to ACTUALLY Design a Board Game      (Aug 2023)
-1.53x   I Uploaded to YouTube Once a Week for a Year  (Dec 2025)
+## Why the live measurement understated it
 
-20 videos measured, median 1.45x, 12 up more than 25%, 2 down
-```
+The live-counter windows straddled the switch. Window 2 began at 03:21 UTC on the
+27th but the switch appears to have taken effect around 00:00 to 04:00 UTC, so
+part of window 2 was still being counted the old way. That drags the measured
+rate change below the true one. The daily figure, measured cleanly over a full
+day, is the accurate one.
 
-A board game video from 2023 does not organically double in the same hour as
-everything else. That is the signature of a counting change, not of traffic.
+The lesson generalises: **a rate change measured across a boundary is a lower
+bound, not an estimate.**
 
-## Prediction A (the conservative one)
+## Notes for anyone checking this
 
-The 2026-08-24 switch landed as announced and its effect is small. Days 08-26
-through 08-28 will come in with an engaged-views gap of **1.5% to 2.5%**, in line
-with the 1.22% and 1.64% already recorded for the 24th and 25th. What the live
-counter is showing is a genuine traffic surge.
+Days keep being revised for roughly five days after they first appear.
+2026-08-24 first appeared with a 1.22% gap and later settled at 1.22% after
+intermediate readings as high as 1.4%. Treat any single read as provisional.
 
-## Prediction B (the one the evidence now favours)
-
-The public-view switch did not actually take effect on this channel until roughly
-**2026-08-27 03:21 UTC**, three days after the announced date. When 08-27 and
-08-28 land in Analytics they will show an engaged-views gap of roughly **31% to
-38%**, while 08-24 through 08-26 stay near 1.5%.
-
-The 31 to 38 percent range is derived from the observed rate change: a 1.45x
-median implies a 31% gap, a 1.62x channel-wide figure implies 38%.
-
-## How to check
-
-Query the Analytics API for `views` and `engagedViews` by day once 2026-08-27
-becomes available, expected around 2026-08-29 or 08-30 given the observed 44 to
-48 hour lag. Compare the gap on the 27th and 28th against the gap on the 24th
-through 26th.
-
-Note that days keep being revised for about five days after they first appear,
-by more than 1% in observed cases, so the first read is not final.
-
-## What would make each one wrong
-
-- **A is wrong** if the gap on 08-27 and 08-28 comes in above about 10%.
-- **B is wrong** if those days come in below about 10%, which would mean the live
-  surge was traffic and the counting change really was small.
-
-Both cannot be true. This resolves itself in about two days.
+All figures above are reproducible from `data/` in this repository, and the
+commit history shows the predictions were recorded before the data existed.
