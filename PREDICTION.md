@@ -6,8 +6,9 @@ yet and will not for roughly two more days.
 
 ## The observation
 
-Starting around **2026-08-27 03:21 UTC**, the live public view counter on this
-channel began running substantially faster, with no change in publishing.
+Starting around **2026-08-27 03:21 UTC**, the live public view counter on the
+measured channel began running substantially faster, with no upload and nothing
+trending.
 
 Measured from per-video cumulative counts on an identical basket of 110 videos:
 

@@ -1,7 +1,8 @@
 # What actually happened when YouTube changed how it counts views
 
-Measurements from the Boundless view-lag probe, 2026-08-23 to 2026-08-28.
-Channel: Dave Jeltema, ~77,500 subscribers, long-form heavy, subscriber-heavy.
+Measurements taken 2026-08-23 to 2026-08-28 on a YouTube channel of roughly
+77,500 subscribers: long-form, education niche, subscriber-heavy traffic.
+Raw data and the code that produced it are in this repository.
 
 Everything below is either **measured** on this channel, **inferred** from those
 measurements, or explicitly **not claimable**. The three are kept separate on
@@ -188,7 +189,8 @@ Not in YouTube's announcement, and not in the coverage:
    percent against 1 percent.
 7. All of it sits on a **pre-change baseline captured on 2026-08-23**, committed
    to a public repository before the change took effect: 110 videos, 21
-   competitor channels, 30 client channels, retention curves and traffic splits.
+   reference channels, 30 further channels (anonymised), retention curves and
+   traffic splits.
 
 That last one is the part that cannot be reproduced after the fact. Anyone can
 describe the change now. Almost nobody can show what the numbers looked like the

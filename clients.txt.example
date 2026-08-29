@@ -1,0 +1,8 @@
+# Channel list for capture_basket.py.
+# One entry per line. Any format works: a channel ID (UCxxxxxxxx),
+# an @handle, or a full youtube.com URL. Inline comments after the
+# entry are ignored.
+#
+# Copy this to clients.txt (which is gitignored) and add your own channels.
+
+# UCxxxxxxxxxxxxxxxxxxxxxx   # example channel | 1,234 subs

@@ -349,7 +349,7 @@ def diff(prev, cur, rates):
 
 
 def alert_key(line):
-    """A stable id for something we have already told Dave about.
+    """A stable id for something already reported.
 
     Revisions are normalised so 8,896 -> 8,789 and 8,789 -> 8,896 share one key.
     Without that, a reverting state file reports the same pair back and forth

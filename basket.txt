@@ -1,6 +1,7 @@
-# Channels to snapshot before and after the 2026-08-24 view-counting switch.
+# Channels sampled before and after the 2026-08-24 view-counting switch.
 # One channel ID per line. Lines starting with # are ignored.
-# Seeded from Dave's vidIQ competitor list plus his own channel.
+# Reference channels in the same niche, spanning a wide range of sizes,
+# plus the author's own channel. Public data only.
 UCpOWnfbrnVjhdZ0OVgvTFpg
 UCg5WjzrwxRRUUDf7WHKPzsA
 UCxI3-49z98MUKF3wTVJ9nkg

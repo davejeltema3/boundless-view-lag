@@ -3,3 +3,6 @@ __pycache__/
 .env
 env.sh
 data/_old/
+
+# identity lists stay local
+clients.txt

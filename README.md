@@ -1,110 +1,116 @@
-# boundless-view-lag
+# What happened when YouTube changed how it counts views
 
-Two jobs, one poller.
+On 2026-08-24 YouTube changed the definition of a view. A view now counts from
+the first frame across long-form, live and Shorts. The previous definition, which
+required the viewer to actually stay, survives as **engaged views** inside
+Analytics.
 
-**1. Measure the lag.** How often does the YouTube Analytics API refresh
-`engagedViews`, and how far behind real time does it run? Answered by
-timestamping the exact moment each new day becomes queryable.
+YouTube's developer notice states that the pre-switch public view count **"will
+no longer be accessible via the YouTube Public Data API"** afterwards.
 
-**2. Capture the switch.** On 2026-08-24 YouTube started counting a view from the
-first frame on long-form and live, and the old methodology survives as
-`engagedViews` in Analytics only. YouTube's own developer notice says the
-pre-switch public count "will no longer be accessible via the YouTube Public Data
-API" afterwards. Everything the Data API records here is therefore unrepeatable.
+That makes the before-picture a one-time capture. This repository is that capture,
+plus the instrumentation that watched the change happen, plus the findings and a
+falsifiable prediction recorded before the data existed to check it.
 
-## What runs, every 5 minutes
+**Start here:** [FINDINGS.md](FINDINGS.md) for what was measured.
+[PREDICTION.md](PREDICTION.md) for the claim made in advance.
 
-1. Refresh an OAuth access token. Analytics is private channel data, so this
-   needs the channel owner's refresh token. An API key cannot reach it.
-2. **Public counters for the entire catalog**, all 110 videos, not a sample.
-   Views, likes, comments. Three `videos.list` calls plus a playlist walk.
-3. Analytics day series at channel level: `views`, `engagedViews`,
+---
+
+## Why this exists
+
+Anyone can describe the change now. Almost nobody can show what the numbers looked
+like the day before, with commit timestamps to prove the record predates the event.
+
+The baseline was captured on 2026-08-23: a full channel catalogue, retention
+curves, traffic splits, and two baskets of other channels ranging from tens of
+subscribers to hundreds of thousands. Then a probe sampled the live public view
+counter every 60 seconds through the switch and kept going.
+
+## What the probe does
+
+Every run refreshes an OAuth token, then:
+
+1. Reads public view, like and comment counts for the **whole catalogue**, not a
+   sample.
+2. Reads a day-level Analytics series: `views`, `engagedViews`,
    `estimatedMinutesWatched`, `averageViewDuration`, `averageViewPercentage`.
-4. Analytics `day x video` for the 20 tracked videos, in a single call.
-5. Analytics `day x insightTrafficSourceType`.
-6. On a new-day event only, 100-bucket retention curves for all 20 tracked videos.
+3. Reads `day x video` for the tracked set, and `day x insightTrafficSourceType`.
+4. On a new-day event, captures 100-bucket retention curves per tracked video.
+5. Holds the runner and samples a fixed set of videos every 60 seconds, because
+   the interesting behaviour happens between the daily rows.
 
-Quota: about 7 Data API units per run, roughly 2,000 a day against the 10,000
-budget. The Analytics API is metered separately, so none of this competes with a
-future title updater.
+It raises three kinds of event: a **new day** of Analytics becoming queryable
+(the timestamp on that is the lag measurement), a **revision** to a day already
+reported, and a **rate jump** in the public counter.
 
-## What it watches for
+Analytics is private channel data, so this needs the channel owner's OAuth
+refresh token. An API key cannot reach it.
 
-- **NEW DAY** — a day that wasn't queryable before now is. The `lag_hours` on that
-  alert is the actual measurement this repo exists for.
-- **REVISED** — a day already reported changed value, including
-  `averageViewPercentage`. Tells us whether numbers keep settling after landing.
-- **RATE JUMP** — catalog-wide views per hour running more than 1.75x the trailing
-  median. This is the tripwire for the counting switch itself, which should look
-  like a step change in the public counter.
+## What's in `data/`
 
-Alerts post through Hazel's own webhook into `#dashboard`, styled like the
-payment alerts, colour-coded by event. That webhook is shared with
-`bcp-program`'s `DISCORD_WEBHOOK_URL`, so regenerating it in Discord breaks both.
-
-## Files
-
-| File | What it holds |
+| File | Contents |
 |---|---|
-| `data/pulse.csv` | one row per run: timestamp, catalog views, subs, latest day, lag |
-| `data/snapshots.jsonl` | full snapshot, written hourly or on any change |
-| `data/changes.jsonl` | only the runs where something moved |
-| `data/retention.jsonl` | 100-bucket retention curves, captured on new-day events |
-| `data/catalog_pre.json` | the pre-switch capture. See below. |
-| `data/state.json` | last snapshot, for diffing |
+| `catalog_pre.json` | the pre-switch capture: every video's public counters, lifetime views vs engaged views, retention curves, traffic and device splits |
+| `basket_pre.json` | reference channels in one niche, wide size range, public data, captured pre-switch |
+| `basket_clients_anon.json` | a second basket of small channels, anonymised (see below) |
+| `pulse.csv` | one row per run: timestamp, catalogue views, subscribers, latest available day, lag in hours |
+| `ticks.csv` | 60-second samples of the live public counter on a fixed video set |
+| `snapshots.jsonl` | full snapshots, hourly or on any change |
+| `changes.jsonl` | only the runs where something moved |
+| `retention.jsonl` | 100-bucket retention curves, captured on new-day events |
 
-`pulse.csv` exists because full snapshots are ~9KB and 5-minute cadence would put
-2.6MB a day into git. The pulse row is what the rate analysis needs, so it goes
-down every run while the heavy record lands hourly.
+## A note on the anonymised basket
 
-## The pre/post capture
+`basket_clients_anon.json` holds 30 real channels captured before the switch,
+spanning roughly 40 to 14,000 subscribers. Their identities are removed because
+their relationship to the author is confidential, and several are small enough
+that naming them would identify individuals.
 
-`capture_baseline.py` takes the deep snapshot that only makes sense at two moments.
+Channel and video identifiers are salted hashes, stable within the file so
+before-and-after comparisons still work. Subscriber counts, view counts, like
+counts, comment counts and durations are unmodified. Nothing needed for the
+size-versus-inflation analysis was removed.
+
+The identity list itself is gitignored. `clients.txt.example` shows the format if
+you want to run the same capture on your own channels.
+
+## Running it yourself
 
 ```
-LABEL=pre  python3 capture_baseline.py     # run before 2026-08-24
-LABEL=post python3 capture_baseline.py     # run after the switch has settled
+pip install nothing        # standard library only
+export YT_CLIENT_ID=...    # OAuth client for a Google Cloud project with
+export YT_CLIENT_SECRET=...#   YouTube Data API v3 and YouTube Analytics API enabled
+export YT_REFRESH_TOKEN=...#   scopes: youtube.force-ssl, yt-analytics.readonly
+export DISCORD_WEBHOOK_URL=...   # optional, for alerts
+
+DRY_RUN=1 python3 poll.py                    # single poll, writes nothing
+LOOP_MINUTES=170 python3 poll.py             # hold and sample every 60s
+LABEL=pre python3 capture_baseline.py        # deep one-off capture
+LABEL=pre BASKET_FILE=basket.txt python3 capture_basket.py
 ```
 
-It records every video's public counters, lifetime `views` vs `engagedViews` per
-video, 100-bucket retention curves for the top 20, and views/engagedViews split
-by traffic source, device and subscriber status, both lifetime and last 90 days.
+`DATA_DIR` redirects output somewhere harmless for local testing.
 
-`data/catalog_pre.json` was captured 2026-08-23, before the switch:
-110 videos, 3,956,757 total public views.
-
-The tracked 20 are pinned from that file, so the before and after compare like
-for like even if the ranking shifts.
-
-## Two questions this is built to answer
-
-**Where is the engaged threshold?** YouTube says only "some amount of seconds"
-after the first frame. It is not 30 seconds, that figure was always about ads.
-Compare each video's post-switch engaged ratio against its own first-bucket watch
-ratio across 20 videos and the threshold falls out. Bucket width is 1% of runtime,
-so shorter videos resolve it more tightly.
-
-**Does retention itself drop on the 24th?** Retention is a ratio whose denominator
-is "people who viewed". If YouTube recomputes it against the new first-frame
-count, every retention graph on the platform falls overnight with no video
-changing. `averageViewPercentage` is logged daily and the full curves on every
-new-day event, so the before/after is on record.
-
-## Setup
-
-Repo secrets: `YT_CLIENT_ID`, `YT_CLIENT_SECRET`, `YT_REFRESH_TOKEN` from
-`youtube-oauth.json`, and `DISCORD_WEBHOOK_URL` from
-`view-lag-probe-webhook.json`. The refresh token already carries both
-`youtube.force-ssl` and `yt-analytics.readonly`.
+Quota: roughly 7 Data API units per run against a 10,000/day budget. The
+Analytics API is metered separately.
 
 ## Known limits
 
-- Analytics has no time dimension finer than `day`. `month` is the only other
-  one. There is no faster source: Studio's Realtime card is views-only and has no
-  API, and the bulk Reporting API is slower.
-- GitHub Actions schedules are best-effort and drift 5-20 minutes under load.
-  Every row stamps its own UTC time, so drift widens resolution rather than
-  corrupting it.
-- On this channel pre-switch, every sub-100% engaged ratio was Shorts
-  contamination. Shorts sat at 22.6% while every long-form source was 97-100%.
-  Any estimate has to weight by traffic mix rather than use one flat average.
+Read these before drawing conclusions from anything here.
+
+- **One primary channel.** Long-form, subscriber-heavy, education niche. A
+  browse-heavy or Shorts-heavy channel may behave differently.
+- **Days keep being revised** for roughly five days after they first appear, by
+  more than 1% in observed cases. A single read is never final, and reading early
+  produced a materially wrong answer about the size of the change.
+- **No dimension finer than `day`** exists in the Analytics API, and Studio's
+  realtime card shows views only, never engaged views. The 60-second sampling is a
+  workaround, not a supported feature.
+- **Scheduled runs are best-effort.** Every row stamps its own UTC time, so gaps
+  widen resolution rather than corrupting it.
+
+## Licence
+
+Data and findings are free to use with attribution. If you reuse a number, link
+the file it came from so the reader can check the commit date.

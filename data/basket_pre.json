@@ -2,7 +2,7 @@
  "label": "pre",
  "captured_at": "2026-08-23T22:32:50+00:00",
  "per_channel_cap": 100,
- "note": "Public Data API values under the counting logic in force at capture time. YouTube states the pre-2026-08-24 logic is not retrievable from the public Data API afterwards.",
+ "note": "Public Data API values under the counting logic in force at capture time. YouTube states the pre-2026-08-24 logic is not retrievable from the public Data API afterwards. These are reference channels in one niche across a wide size range, sampled from public data only.",
  "channels": {
   "UCxI3-49z98MUKF3wTVJ9nkg": {
    "title": "Romayroh",
