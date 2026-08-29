@@ -46,6 +46,104 @@ traffic mixed in, not long-form. The clean pre-change baseline is 08-13 to 08-26
 
 ---
 
+## 1b. Day two, recovered ahead of the API
+
+YouTube Studio's Advanced mode reports engaged views roughly **9 to 24 hours**
+behind, while the Analytics API runs **44 to 48 hours** behind. Studio's export
+therefore contains days the API cannot yet return.
+
+Subtracting the API's known window from Studio's range total isolates those days:
+
+```
+Studio export, 2026-08-20 to 2026-08-29   73,407 views   59,571 engaged
+API, 2026-08-20 to 2026-08-27             57,716 views   52,465 engaged
+                                          ------------   -------------
+unseen window (08-28 + part of 08-29)     15,691 views    7,106 engaged
+```
+
+```
+day                        gap       multiplier
+2026-08-27 (API)         55.08%        2.23x
+08-28 + part of 08-29    54.71%        2.21x
+```
+
+**The claim this supports:** the effect is stable across the first two days, not a
+single-day anomaly. 2.23x then 2.21x.
+
+Per video across the unseen days, the spread tightens to 36.6% to 65.2%, against
+21% to 95% on the 27th where small-sample videos dominated the extremes. The
+channel's newest upload sits at 55.9%, in line with the channel rather than
+behaving differently as a new video.
+
+*Method: `Table data.csv` from a Studio Advanced mode export, differenced against
+an `ids=channel==MINE` API query over the same start date. Note that Studio's
+`Chart data.csv` only exports the metric currently plotted on the chart, so
+select Views and Engaged views before exporting to get per-day rows.*
+
+---
+
+## 1c. Five channels, one switch date
+
+Daily views and engaged views exported from YouTube Studio for five channels the
+author has analytics access to. Four are anonymised. Studio reports engaged views
+9 to 24 hours behind, so this reaches days the API cannot yet return.
+
+| channel | subs | niche | pre-switch gap | post-switch gap | multiplier |
+|---|---|---|---|---|---|
+| A (own) | 77,800 | YouTube education | 0.67% | 55.08% | 2.21x |
+| B | 8,010 | psychology / podcast | 0.55% | 60.10% | 2.49x |
+| C | 14,100 | craft tutorials | 0.10% | 36.41% | 1.57x |
+| D | 4,400 | tabletop gaming | 20.10% | 64.93% | 2.28x |
+| E | 3,460 | tabletop wargaming | 1.38% | 62.56% | 2.63x |
+
+Multiplier is normalised against each channel's own pre-switch baseline, which
+matters for channel D: it carried a 20% gap beforehand from Shorts traffic and
+still more than doubled on top of that.
+
+**Every one of the five switched on 2026-08-27. None switched on 2026-08-24, the
+announced date.**
+
+Channel B, day by day, as a representative example:
+
+```
+2026-08-24    1,862 views    1,855 engaged     0.38%    1.00x   <- announced date
+2026-08-25    1,800          1,780             1.11%    1.01x
+2026-08-26    1,590          1,553             2.33%    1.02x
+2026-08-27    4,104          1,603            60.94%    2.56x   <- switch
+2026-08-28    4,791          1,946            59.38%    2.46x
+```
+
+**The claim this supports:** the change reached these five channels three days
+after the announced date, on the same day, and multiplied public views by
+**1.57x to 2.63x**.
+
+### The effect does not scale with channel size
+
+```
+correlation between subscriber count and multiplier:  r = -0.15
+
+  3,460 subs  ->  2.63x
+  8,010 subs  ->  2.49x
+  4,400 subs  ->  2.28x
+ 77,800 subs  ->  2.21x
+ 14,100 subs  ->  1.57x
+```
+
+The largest channel in the set has nearly the smallest multiplier. The smallest
+has nearly the largest.
+
+**The claim this supports:** this is **not** a story about big channels gaining
+more than small ones. The variable is traffic mix, not audience size. A prediction
+that the change would widen the gap between established and new creators is not
+supported by this data.
+
+*Method: YouTube Studio Advanced mode, Content report, date range 2026-08-20 to
+2026-08-29, exported twice per channel because Studio's Chart data export only
+carries the metric currently plotted. `Totals.csv` from each export gives daily
+channel-level values.*
+
+---
+
 ## 2. The mechanism: where the video was playing
 
 This is the strongest cut in the whole dataset. Chart as paired bars, before and
@@ -270,6 +368,9 @@ All captured 2026-08-23, committed before the change took effect.
 | claim you might make | evidence | strength |
 |---|---|---|
 | The change landed 3 days late on this channel | Section 1 | Strong, one channel |
+| The effect held on day two, 2.21x | Section 1b | Strong |
+| Five channels all switched 2026-08-27 | Section 1c | **Strongest claim here** |
+| The effect does not scale with channel size | Section 1c | Strong, n=5 |
 | Public views multiplied 2.23x | Section 1 | Strong, one channel, one day |
 | Feed views multiplied 5.6x, watch page 1.4x | Section 2 | Strong, the mechanism |
 | Your inflation depends on your traffic mix | Sections 2, 3, 7 | Strong |
@@ -278,14 +379,15 @@ All captured 2026-08-23, committed before the change took effect.
 | Numbers keep revising for ~5 days | Section 9 | Strong |
 | Nothing visibly changed on the announced date | Sections 1, 10 | Strong |
 | Big gaps before 08-27 were Shorts | Section 11 | Moderate, small sample |
-| This is happening platform-wide | not yet measured | **Weak. Do not claim.** |
+| This is happening platform-wide | 5 channels, 4 niches, all same date | Moderate. Say "five channels", not "the platform". |
 
 ## What is not measured here
 
 - **One primary channel.** Long-form, subscriber-heavy, education niche.
-- **One post-change day** at full resolution. 08-28 onward had not landed.
-- **No other channel's engaged views.** That data is private to each owner.
-  Everything about other channels in this repo is public view counts only.
+- **Two post-change days**, the second recovered from a Studio export rather
+  than the API.
+- **Five channels, not a sample of the platform.** All five are channels the
+  author has analytics access to, so they are not randomly selected.
 - **No monetisation effect.** Earnings are based on engaged views, which did not
   change definition, but no revenue impact was measured.
 - **No claim about the rollout order.** Why this channel switched on the 27th

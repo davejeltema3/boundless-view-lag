@@ -36,6 +36,36 @@ YouTube announced 2026-08-24. On this channel, nothing happened on that date or
 for two days after. The switch landed on **2026-08-27**, and public views ran at
 **2.23x**, an increase of **123%**.
 
+### 1b. The effect held on day two
+
+Studio reports engaged views 9 to 24 hours behind. The API runs 44 to 48 hours
+behind. Differencing a Studio export against the API isolates the days the API
+cannot see yet:
+
+```
+2026-08-27                 9,217 views   4,140 engaged   55.08%   2.23x
+08-28 + part of 08-29     15,691 views   7,106 engaged   54.71%   2.21x
+```
+
+Two consecutive days at effectively the same multiplier. This is not a one-day
+anomaly.
+
+### 1c. Five channels, all switching on the same day
+
+| channel | subs | pre-switch gap | post-switch gap | multiplier |
+|---|---|---|---|---|
+| A (own) | 77,800 | 0.67% | 55.08% | 2.21x |
+| B | 8,010 | 0.55% | 60.10% | 2.49x |
+| C | 14,100 | 0.10% | 36.41% | 1.57x |
+| D | 4,400 | 20.10% | 64.93% | 2.28x |
+| E | 3,460 | 1.38% | 62.56% | 2.63x |
+
+**All five switched on 2026-08-27. None on the announced 2026-08-24.** Four
+different niches, sizes from 3,460 to 77,800 subscribers.
+
+The multiplier ranges 1.57x to 2.63x and **does not track channel size**
+(r = -0.15). The largest channel has nearly the smallest effect.
+
 ### 2. The mechanism: it depends on where the video was playing
 
 This is the finding that explains everything else.
@@ -159,17 +189,17 @@ Supported by the measurements, one step removed from them.
 
 ## Cannot be claimed from this data
 
-- **One channel.** Long-form, education, subscriber-heavy. The mechanism should
-  generalise. The magnitude depends on a channel's own traffic mix.
-- **One post-change day** at full resolution.
+- **Five channels, not a random sample.** All are channels the author has
+  analytics access to. The consistency of the date is striking, but five is five.
+- **Two post-change days**, the second recovered from a Studio export.
 - **No other channel's engaged views.** That data is private to each owner.
   Everything about other channels here is public view counts only.
 - **No monetisation effect measured.** Earnings are based on engaged views, which
   did not change definition.
 - **No explanation for the three-day delay.** The rollout order is unknown.
-- **Not established as platform-wide.** Realtime graphs on other channels showed a
-  similar step on the same night, but without engaged-view access that is
-  suggestive, not proof.
+- **Not established as platform-wide.** Five channels across four niches all
+  switched on the same date, which is strong, but they are not a random sample of
+  YouTube.
 
 ---
 
