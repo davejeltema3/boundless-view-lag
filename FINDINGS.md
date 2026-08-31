@@ -54,17 +54,17 @@ anomaly.
 
 | channel | subs | pre-switch gap | post-switch gap | multiplier |
 |---|---|---|---|---|
-| A (own) | 77,800 | 0.67% | 55.08% | 2.21x |
-| B | 8,010 | 0.55% | 60.10% | 2.49x |
+| A (own) | 77,800 | 0.67% | 55.08% | 2.23x |
+| B | 8,010 | 0.55% | 60.10% | 2.51x |
 | C | 14,100 | 0.10% | 36.41% | 1.57x |
-| D | 4,400 | 20.10% | 64.93% | 2.28x |
-| E | 3,460 | 1.38% | 62.56% | 2.63x |
+| D | 4,400 | 0.68% | 65.37% | 2.89x |
+| E | 3,460 | 1.38% | 62.56% | 2.67x |
 
 **All five switched on 2026-08-27. None on the announced 2026-08-24.** Four
 different niches, sizes from 3,460 to 77,800 subscribers.
 
-The multiplier ranges 1.57x to 2.63x and **does not track channel size**
-(r = -0.15). The largest channel has nearly the smallest effect.
+The multiplier ranges 1.57x to 2.89x and **does not track channel size**
+(r = -0.28). The largest channel has nearly the smallest effect.
 
 ### 2. The mechanism: it depends on where the video was playing
 

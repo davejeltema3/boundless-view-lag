@@ -90,15 +90,16 @@ author has analytics access to. Four are anonymised. Studio reports engaged view
 
 | channel | subs | niche | pre-switch gap | post-switch gap | multiplier |
 |---|---|---|---|---|---|
-| A (own) | 77,800 | YouTube education | 0.67% | 55.08% | 2.21x |
-| B | 8,010 | psychology / podcast | 0.55% | 60.10% | 2.49x |
+| A (own) | 77,800 | YouTube education | 0.67% | 55.08% | 2.23x |
+| B | 8,010 | psychology / podcast | 0.55% | 60.10% | 2.51x |
 | C | 14,100 | craft tutorials | 0.10% | 36.41% | 1.57x |
-| D | 4,400 | tabletop gaming | 20.10% | 64.93% | 2.28x |
-| E | 3,460 | tabletop wargaming | 1.38% | 62.56% | 2.63x |
+| D | 4,400 | tabletop gaming | 0.68% | 65.37% | 2.89x |
+| E | 3,460 | tabletop wargaming | 1.38% | 62.56% | 2.67x |
 
-Multiplier is normalised against each channel's own pre-switch baseline, which
-matters for channel D: it carried a 20% gap beforehand from Shorts traffic and
-still more than doubled on top of that.
+Every channel's pre-switch baseline sits under 1.4%, so the multipliers are
+directly comparable with no normalisation. Channel D was re-exported excluding
+Shorts, which dropped its pre-switch gap from 20.10% to 0.68% and raised its
+measured multiplier to 2.89x, the largest in the set.
 
 **Every one of the five switched on 2026-08-27. None switched on 2026-08-24, the
 announced date.**
@@ -115,17 +116,17 @@ Channel B, day by day, as a representative example:
 
 **The claim this supports:** the change reached these five channels three days
 after the announced date, on the same day, and multiplied public views by
-**1.57x to 2.63x**.
+**1.57x to 2.89x**.
 
 ### The effect does not scale with channel size
 
 ```
-correlation between subscriber count and multiplier:  r = -0.15
+correlation between subscriber count and multiplier:  r = -0.28
 
-  3,460 subs  ->  2.63x
-  8,010 subs  ->  2.49x
-  4,400 subs  ->  2.28x
- 77,800 subs  ->  2.21x
+  4,400 subs  ->  2.89x
+  3,460 subs  ->  2.67x
+  8,010 subs  ->  2.51x
+ 77,800 subs  ->  2.23x
  14,100 subs  ->  1.57x
 ```
 
