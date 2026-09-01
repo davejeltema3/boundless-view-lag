@@ -1,20 +1,20 @@
 {
- "ts": "2026-08-31T22:49:41+00:00",
+ "ts": "2026-09-01T01:25:58+00:00",
  "channel_public": {
   "viewCount": 3972256,
   "subscriberCount": 78000,
   "videoCount": 100
  },
- "catalog_views": 4033888,
+ "catalog_views": 4035254,
  "catalog_size": 111,
  "public": {
   "BZVICN8caOE": [
-   19292,
-   555,
-   100
+   19597,
+   561,
+   101
   ],
   "6p1S5zOPUF4": [
-   25471,
+   25493,
    841,
    274
   ],
@@ -24,7 +24,7 @@
    0
   ],
   "N4o_vzqnATw": [
-   7872,
+   7874,
    448,
    157
   ],
@@ -34,27 +34,27 @@
    2
   ],
   "dm7ahnQtZ84": [
-   4197,
+   4200,
    214,
    47
   ],
   "yVnUsL1cnzw": [
-   7249,
+   7256,
    544,
    97
   ],
   "m63VSyZiEsA": [
-   6383,
+   6386,
    512,
    98
   ],
   "JtolbefPUtg": [
-   16716,
+   16717,
    1108,
    155
   ],
   "oIJRBvGLKgw": [
-   5518,
+   5519,
    284,
    50
   ],
@@ -64,7 +64,7 @@
    72
   ],
   "IF7-cQ8hMk0": [
-   10460,
+   10466,
    569,
    131
   ],
@@ -79,7 +79,7 @@
    165
   ],
   "l7vEZISBtmg": [
-   15923,
+   15949,
    1126,
    119
   ],
@@ -89,12 +89,12 @@
    86
   ],
   "0aG4xY3IFoo": [
-   17661,
+   17662,
    944,
    244
   ],
   "3GVEAl3akR0": [
-   6977,
+   6978,
    560,
    57
   ],
@@ -109,7 +109,7 @@
    74
   ],
   "cwACFTas8Fc": [
-   7318,
+   7319,
    248,
    59
   ],
@@ -119,18 +119,18 @@
    92
   ],
   "nq-VuutsUQ8": [
-   10491,
+   10492,
    620,
    160
   ],
   "rKKeLVYXlUU": [
-   12026,
+   12031,
    909,
    121
   ],
   "LrIr93kC9mc": [
-   63765,
-   3584,
+   63797,
+   3585,
    429
   ],
   "WHSnoGjjHWE": [
@@ -144,8 +144,8 @@
    96
   ],
   "JO2JSj3JU48": [
-   440647,
-   18964,
+   440881,
+   18965,
    1366
   ],
   "7i1MPsYHm0U": [
@@ -154,22 +154,22 @@
    111
   ],
   "d3PVbDSP8m8": [
-   123168,
+   123187,
    8223,
    1831
   ],
   "3MtsASdntAc": [
-   36275,
+   36278,
    2283,
    704
   ],
   "3HHctWZf7MM": [
-   14506,
-   1083,
+   14514,
+   1084,
    161
   ],
   "625qC8XCMm8": [
-   44136,
+   44145,
    2766,
    457
   ],
@@ -184,17 +184,17 @@
    218
   ],
   "f0OZI3K36DQ": [
-   31591,
+   31600,
    1828,
    230
   ],
   "m8cn7udj8R4": [
-   6271,
+   6272,
    508,
    126
   ],
   "UmOL_-fD3T8": [
-   6264,
+   6265,
    461,
    146
   ],
@@ -219,12 +219,12 @@
    60
   ],
   "xuzTW5S-8uc": [
-   23482,
+   23493,
    1394,
    384
   ],
   "swaKs3uM4NQ": [
-   187334,
+   187343,
    11199,
    2231
   ],
@@ -239,8 +239,8 @@
    239
   ],
   "BnGGk4J55Og": [
-   6457,
-   403,
+   6459,
+   404,
    120
   ],
   "NHKW4sOSwT0": [
@@ -264,13 +264,13 @@
    917
   ],
   "zzrOxIMm4BI": [
-   43898,
+   43899,
    2898,
    781
   ],
   "Q5-kOGAdBmI": [
-   612025,
-   32747,
+   612396,
+   32751,
    6155
   ],
   "spM0FKlDBUA": [
@@ -279,7 +279,7 @@
    62
   ],
   "N4aIQmwd_LQ": [
-   9521,
+   9522,
    928,
    115
   ],
@@ -354,8 +354,8 @@
    9
   ],
   "f-tug0l-d7U": [
-   106170,
-   6871,
+   106194,
+   6873,
    711
   ],
   "ZG2ENcqPvKg": [
@@ -379,7 +379,7 @@
    136
   ],
   "alW95bEY9pw": [
-   14068,
+   14070,
    926,
    135
   ],
@@ -399,7 +399,7 @@
    705
   ],
   "nP_33Ry20MM": [
-   4887,
+   4889,
    344,
    65
   ],
@@ -414,7 +414,7 @@
    79
   ],
   "635ZL8nTsD8": [
-   44551,
+   44554,
    2285,
    401
   ],
@@ -429,8 +429,8 @@
    134
   ],
   "gRPJd1xSRyo": [
-   525959,
-   35911,
+   526029,
+   35913,
    15614
   ],
   "WU-jT7WO2eA": [
@@ -439,8 +439,8 @@
    254
   ],
   "vvNXOJUfg3I": [
-   305073,
-   22364,
+   305128,
+   22367,
    3387
   ],
   "paYgxMQxvig": [
@@ -499,28 +499,28 @@
    33
   ],
   "XDd4u2xnRtE": [
-   276082,
-   14249,
+   276122,
+   14250,
    584
   ],
   "qsXdeHaRFrA": [
-   10659,
-   363,
+   10663,
+   364,
    38
   ],
   "4X5lLrOu4GE": [
-   59626,
+   59645,
    2568,
    97
   ],
   "ZUuudT9Vn_w": [
-   125091,
-   4352,
+   125114,
+   4354,
    146
   ],
   "waKgJnhaubs": [
-   117105,
-   7355,
+   117133,
+   7356,
    225
   ],
   "X6w9SMZjP-k": [
@@ -587,19 +587,12 @@
   "NHKW4sOSwT0"
  ],
  "range": [
-  "2026-08-19",
-  "2026-08-31"
+  "2026-08-20",
+  "2026-09-01"
  ],
  "latest_analytics_day": "2026-08-29",
- "lag_hours": 46.83,
+ "lag_hours": 49.43,
  "channel_days": {
-  "2026-08-19": {
-   "views": 12637,
-   "engagedViews": 12626,
-   "minutes": 74376,
-   "avgDuration": 353,
-   "avgViewPct": 28.45
-  },
   "2026-08-20": {
    "views": 7035,
    "engagedViews": 7031,
@@ -672,567 +665,7 @@
   }
  },
  "video_days": {
-  "rTkdY2ucJtM": {
-   "2026-08-19": {
-    "views": 1,
-    "engagedViews": 1,
-    "avgViewPct": 0.2
-   },
-   "2026-08-20": {
-    "views": 2,
-    "engagedViews": 2,
-    "avgViewPct": 2.19
-   },
-   "2026-08-21": {
-    "views": 0,
-    "engagedViews": 0,
-    "avgViewPct": 0
-   },
-   "2026-08-22": {
-    "views": 0,
-    "engagedViews": 0,
-    "avgViewPct": 0
-   },
-   "2026-08-23": {
-    "views": 2,
-    "engagedViews": 2,
-    "avgViewPct": 0.25
-   },
-   "2026-08-25": {
-    "views": 2,
-    "engagedViews": 2,
-    "avgViewPct": 1.46
-   },
-   "2026-08-26": {
-    "views": 2,
-    "engagedViews": 2,
-    "avgViewPct": 20.39
-   },
-   "2026-08-27": {
-    "views": 2,
-    "engagedViews": 2,
-    "avgViewPct": 6.68
-   }
-  },
-  "swaKs3uM4NQ": {
-   "2026-08-19": {
-    "views": 28,
-    "engagedViews": 28,
-    "avgViewPct": 30.15
-   },
-   "2026-08-20": {
-    "views": 22,
-    "engagedViews": 22,
-    "avgViewPct": 23.88
-   },
-   "2026-08-21": {
-    "views": 10,
-    "engagedViews": 10,
-    "avgViewPct": 12.08
-   },
-   "2026-08-22": {
-    "views": 12,
-    "engagedViews": 12,
-    "avgViewPct": 27.97
-   },
-   "2026-08-23": {
-    "views": 21,
-    "engagedViews": 21,
-    "avgViewPct": 14.45
-   },
-   "2026-08-24": {
-    "views": 17,
-    "engagedViews": 17,
-    "avgViewPct": 47.46
-   },
-   "2026-08-25": {
-    "views": 16,
-    "engagedViews": 16,
-    "avgViewPct": 42.6
-   },
-   "2026-08-26": {
-    "views": 16,
-    "engagedViews": 16,
-    "avgViewPct": 45.95
-   },
-   "2026-08-27": {
-    "views": 48,
-    "engagedViews": 12,
-    "avgViewPct": 10.21
-   },
-   "2026-08-28": {
-    "views": 39,
-    "engagedViews": 13,
-    "avgViewPct": 37.19
-   },
-   "2026-08-29": {
-    "views": 43,
-    "engagedViews": 10,
-    "avgViewPct": 23.95
-   }
-  },
-  "2eybwTBhkPE": {
-   "2026-08-19": {
-    "views": 13,
-    "engagedViews": 13,
-    "avgViewPct": 22.95
-   },
-   "2026-08-20": {
-    "views": 17,
-    "engagedViews": 17,
-    "avgViewPct": 23.57
-   },
-   "2026-08-21": {
-    "views": 14,
-    "engagedViews": 14,
-    "avgViewPct": 33.14
-   },
-   "2026-08-22": {
-    "views": 13,
-    "engagedViews": 13,
-    "avgViewPct": 38.07
-   },
-   "2026-08-23": {
-    "views": 17,
-    "engagedViews": 17,
-    "avgViewPct": 30.62
-   },
-   "2026-08-24": {
-    "views": 28,
-    "engagedViews": 28,
-    "avgViewPct": 21.81
-   },
-   "2026-08-25": {
-    "views": 35,
-    "engagedViews": 35,
-    "avgViewPct": 29.25
-   },
-   "2026-08-26": {
-    "views": 20,
-    "engagedViews": 20,
-    "avgViewPct": 26.42
-   },
-   "2026-08-27": {
-    "views": 59,
-    "engagedViews": 26,
-    "avgViewPct": 31.47
-   },
-   "2026-08-28": {
-    "views": 46,
-    "engagedViews": 16,
-    "avgViewPct": 33.7
-   },
-   "2026-08-29": {
-    "views": 48,
-    "engagedViews": 17,
-    "avgViewPct": 39.4
-   }
-  },
-  "gRPJd1xSRyo": {
-   "2026-08-19": {
-    "views": 361,
-    "engagedViews": 361,
-    "avgViewPct": 39.86
-   },
-   "2026-08-20": {
-    "views": 235,
-    "engagedViews": 235,
-    "avgViewPct": 43.12
-   },
-   "2026-08-21": {
-    "views": 286,
-    "engagedViews": 286,
-    "avgViewPct": 40.35
-   },
-   "2026-08-22": {
-    "views": 396,
-    "engagedViews": 396,
-    "avgViewPct": 39.13
-   },
-   "2026-08-23": {
-    "views": 373,
-    "engagedViews": 373,
-    "avgViewPct": 37.6
-   },
-   "2026-08-24": {
-    "views": 332,
-    "engagedViews": 332,
-    "avgViewPct": 42.91
-   },
-   "2026-08-25": {
-    "views": 296,
-    "engagedViews": 296,
-    "avgViewPct": 41.7
-   },
-   "2026-08-26": {
-    "views": 294,
-    "engagedViews": 288,
-    "avgViewPct": 47.09
-   },
-   "2026-08-27": {
-    "views": 722,
-    "engagedViews": 285,
-    "avgViewPct": 42.86
-   },
-   "2026-08-28": {
-    "views": 616,
-    "engagedViews": 219,
-    "avgViewPct": 49
-   },
-   "2026-08-29": {
-    "views": 599,
-    "engagedViews": 212,
-    "avgViewPct": 38.84
-   }
-  },
-  "635ZL8nTsD8": {
-   "2026-08-19": {
-    "views": 64,
-    "engagedViews": 64,
-    "avgViewPct": 21.71
-   },
-   "2026-08-20": {
-    "views": 63,
-    "engagedViews": 63,
-    "avgViewPct": 26.04
-   },
-   "2026-08-21": {
-    "views": 74,
-    "engagedViews": 74,
-    "avgViewPct": 31.33
-   },
-   "2026-08-22": {
-    "views": 79,
-    "engagedViews": 79,
-    "avgViewPct": 31.3
-   },
-   "2026-08-23": {
-    "views": 67,
-    "engagedViews": 67,
-    "avgViewPct": 26.35
-   },
-   "2026-08-24": {
-    "views": 71,
-    "engagedViews": 71,
-    "avgViewPct": 27.98
-   },
-   "2026-08-25": {
-    "views": 72,
-    "engagedViews": 72,
-    "avgViewPct": 22.61
-   },
-   "2026-08-26": {
-    "views": 78,
-    "engagedViews": 77,
-    "avgViewPct": 27.54
-   },
-   "2026-08-27": {
-    "views": 133,
-    "engagedViews": 59,
-    "avgViewPct": 35.87
-   },
-   "2026-08-28": {
-    "views": 113,
-    "engagedViews": 49,
-    "avgViewPct": 19.07
-   },
-   "2026-08-29": {
-    "views": 141,
-    "engagedViews": 53,
-    "avgViewPct": 31.46
-   }
-  },
-  "d3PVbDSP8m8": {
-   "2026-08-19": {
-    "views": 87,
-    "engagedViews": 87,
-    "avgViewPct": 41.1
-   },
-   "2026-08-20": {
-    "views": 71,
-    "engagedViews": 71,
-    "avgViewPct": 46.9
-   },
-   "2026-08-21": {
-    "views": 61,
-    "engagedViews": 61,
-    "avgViewPct": 41.85
-   },
-   "2026-08-22": {
-    "views": 50,
-    "engagedViews": 50,
-    "avgViewPct": 43.57
-   },
-   "2026-08-23": {
-    "views": 45,
-    "engagedViews": 45,
-    "avgViewPct": 38.78
-   },
-   "2026-08-24": {
-    "views": 67,
-    "engagedViews": 67,
-    "avgViewPct": 47.85
-   },
-   "2026-08-25": {
-    "views": 70,
-    "engagedViews": 70,
-    "avgViewPct": 39.74
-   },
-   "2026-08-26": {
-    "views": 84,
-    "engagedViews": 82,
-    "avgViewPct": 46.69
-   },
-   "2026-08-27": {
-    "views": 97,
-    "engagedViews": 62,
-    "avgViewPct": 39.86
-   },
-   "2026-08-28": {
-    "views": 133,
-    "engagedViews": 79,
-    "avgViewPct": 42.97
-   },
-   "2026-08-29": {
-    "views": 113,
-    "engagedViews": 61,
-    "avgViewPct": 41.07
-   }
-  },
-  "XDd4u2xnRtE": {
-   "2026-08-19": {
-    "views": 152,
-    "engagedViews": 152,
-    "avgViewPct": 32.93
-   },
-   "2026-08-20": {
-    "views": 123,
-    "engagedViews": 123,
-    "avgViewPct": 36.53
-   },
-   "2026-08-21": {
-    "views": 124,
-    "engagedViews": 124,
-    "avgViewPct": 36.27
-   },
-   "2026-08-22": {
-    "views": 142,
-    "engagedViews": 142,
-    "avgViewPct": 36.5
-   },
-   "2026-08-23": {
-    "views": 130,
-    "engagedViews": 130,
-    "avgViewPct": 35.36
-   },
-   "2026-08-24": {
-    "views": 126,
-    "engagedViews": 126,
-    "avgViewPct": 38.14
-   },
-   "2026-08-25": {
-    "views": 127,
-    "engagedViews": 127,
-    "avgViewPct": 38.01
-   },
-   "2026-08-26": {
-    "views": 127,
-    "engagedViews": 126,
-    "avgViewPct": 31.91
-   },
-   "2026-08-27": {
-    "views": 281,
-    "engagedViews": 112,
-    "avgViewPct": 35.05
-   },
-   "2026-08-28": {
-    "views": 240,
-    "engagedViews": 118,
-    "avgViewPct": 32.26
-   },
-   "2026-08-29": {
-    "views": 219,
-    "engagedViews": 102,
-    "avgViewPct": 33.9
-   }
-  },
-  "LrIr93kC9mc": {
-   "2026-08-19": {
-    "views": 123,
-    "engagedViews": 123,
-    "avgViewPct": 41.53
-   },
-   "2026-08-20": {
-    "views": 87,
-    "engagedViews": 87,
-    "avgViewPct": 37.04
-   },
-   "2026-08-21": {
-    "views": 77,
-    "engagedViews": 77,
-    "avgViewPct": 30.16
-   },
-   "2026-08-22": {
-    "views": 94,
-    "engagedViews": 94,
-    "avgViewPct": 29.85
-   },
-   "2026-08-23": {
-    "views": 108,
-    "engagedViews": 108,
-    "avgViewPct": 30.02
-   },
-   "2026-08-24": {
-    "views": 106,
-    "engagedViews": 106,
-    "avgViewPct": 38.79
-   },
-   "2026-08-25": {
-    "views": 85,
-    "engagedViews": 85,
-    "avgViewPct": 31.21
-   },
-   "2026-08-26": {
-    "views": 80,
-    "engagedViews": 80,
-    "avgViewPct": 32.28
-   },
-   "2026-08-27": {
-    "views": 130,
-    "engagedViews": 74,
-    "avgViewPct": 29.12
-   },
-   "2026-08-28": {
-    "views": 110,
-    "engagedViews": 70,
-    "avgViewPct": 22.03
-   },
-   "2026-08-29": {
-    "views": 123,
-    "engagedViews": 71,
-    "avgViewPct": 37.35
-   }
-  },
-  "f-tug0l-d7U": {
-   "2026-08-19": {
-    "views": 80,
-    "engagedViews": 80,
-    "avgViewPct": 36.33
-   },
-   "2026-08-20": {
-    "views": 49,
-    "engagedViews": 49,
-    "avgViewPct": 37.85
-   },
-   "2026-08-21": {
-    "views": 52,
-    "engagedViews": 52,
-    "avgViewPct": 26.35
-   },
-   "2026-08-22": {
-    "views": 52,
-    "engagedViews": 52,
-    "avgViewPct": 31.07
-   },
-   "2026-08-23": {
-    "views": 64,
-    "engagedViews": 64,
-    "avgViewPct": 27.74
-   },
-   "2026-08-24": {
-    "views": 67,
-    "engagedViews": 67,
-    "avgViewPct": 35.59
-   },
-   "2026-08-25": {
-    "views": 54,
-    "engagedViews": 54,
-    "avgViewPct": 32.03
-   },
-   "2026-08-26": {
-    "views": 63,
-    "engagedViews": 63,
-    "avgViewPct": 25.55
-   },
-   "2026-08-27": {
-    "views": 60,
-    "engagedViews": 47,
-    "avgViewPct": 33.55
-   },
-   "2026-08-28": {
-    "views": 54,
-    "engagedViews": 48,
-    "avgViewPct": 32.72
-   },
-   "2026-08-29": {
-    "views": 82,
-    "engagedViews": 61,
-    "avgViewPct": 37.28
-   }
-  },
-  "UEDeuUouDmQ": {
-   "2026-08-19": {
-    "views": 26,
-    "engagedViews": 26,
-    "avgViewPct": 41.82
-   },
-   "2026-08-20": {
-    "views": 24,
-    "engagedViews": 24,
-    "avgViewPct": 35.05
-   },
-   "2026-08-21": {
-    "views": 14,
-    "engagedViews": 14,
-    "avgViewPct": 38.05
-   },
-   "2026-08-22": {
-    "views": 11,
-    "engagedViews": 11,
-    "avgViewPct": 30.48
-   },
-   "2026-08-23": {
-    "views": 16,
-    "engagedViews": 16,
-    "avgViewPct": 24.68
-   },
-   "2026-08-24": {
-    "views": 24,
-    "engagedViews": 24,
-    "avgViewPct": 44.31
-   },
-   "2026-08-25": {
-    "views": 15,
-    "engagedViews": 15,
-    "avgViewPct": 51.18
-   },
-   "2026-08-26": {
-    "views": 16,
-    "engagedViews": 16,
-    "avgViewPct": 53.35
-   },
-   "2026-08-27": {
-    "views": 21,
-    "engagedViews": 15,
-    "avgViewPct": 50.84
-   },
-   "2026-08-28": {
-    "views": 29,
-    "engagedViews": 10,
-    "avgViewPct": 51.56
-   },
-   "2026-08-29": {
-    "views": 27,
-    "engagedViews": 12,
-    "avgViewPct": 68.78
-   }
-  },
   "4X5lLrOu4GE": {
-   "2026-08-19": {
-    "views": 46,
-    "engagedViews": 46,
-    "avgViewPct": 46.12
-   },
    "2026-08-20": {
     "views": 55,
     "engagedViews": 55,
@@ -1284,126 +717,111 @@
     "avgViewPct": 30.97
    }
   },
-  "vvNXOJUfg3I": {
-   "2026-08-19": {
-    "views": 527,
-    "engagedViews": 527,
-    "avgViewPct": 27.15
-   },
+  "2eybwTBhkPE": {
    "2026-08-20": {
-    "views": 466,
-    "engagedViews": 466,
-    "avgViewPct": 28.52
+    "views": 17,
+    "engagedViews": 17,
+    "avgViewPct": 23.57
    },
    "2026-08-21": {
-    "views": 376,
-    "engagedViews": 376,
-    "avgViewPct": 27.7
+    "views": 14,
+    "engagedViews": 14,
+    "avgViewPct": 33.14
    },
    "2026-08-22": {
-    "views": 369,
-    "engagedViews": 369,
-    "avgViewPct": 28.49
-   },
-   "2026-08-23": {
-    "views": 510,
-    "engagedViews": 509,
-    "avgViewPct": 25.61
-   },
-   "2026-08-24": {
-    "views": 332,
-    "engagedViews": 332,
-    "avgViewPct": 27.97
-   },
-   "2026-08-25": {
-    "views": 300,
-    "engagedViews": 300,
-    "avgViewPct": 27.97
-   },
-   "2026-08-26": {
-    "views": 288,
-    "engagedViews": 288,
-    "avgViewPct": 28.77
-   },
-   "2026-08-27": {
-    "views": 481,
-    "engagedViews": 256,
-    "avgViewPct": 31.11
-   },
-   "2026-08-28": {
-    "views": 349,
-    "engagedViews": 193,
-    "avgViewPct": 27.58
-   },
-   "2026-08-29": {
-    "views": 384,
-    "engagedViews": 233,
-    "avgViewPct": 33.24
-   }
-  },
-  "NHKW4sOSwT0": {
-   "2026-08-19": {
-    "views": 12,
-    "engagedViews": 12,
-    "avgViewPct": 40.51
-   },
-   "2026-08-20": {
-    "views": 10,
-    "engagedViews": 10,
-    "avgViewPct": 51.35
-   },
-   "2026-08-21": {
     "views": 13,
     "engagedViews": 13,
-    "avgViewPct": 30.2
-   },
-   "2026-08-22": {
-    "views": 9,
-    "engagedViews": 9,
-    "avgViewPct": 71.46
+    "avgViewPct": 38.07
    },
    "2026-08-23": {
-    "views": 5,
-    "engagedViews": 5,
-    "avgViewPct": 17.45
+    "views": 17,
+    "engagedViews": 17,
+    "avgViewPct": 30.62
    },
    "2026-08-24": {
-    "views": 9,
-    "engagedViews": 9,
-    "avgViewPct": 39.45
+    "views": 28,
+    "engagedViews": 28,
+    "avgViewPct": 21.81
    },
    "2026-08-25": {
-    "views": 10,
-    "engagedViews": 10,
-    "avgViewPct": 59.67
+    "views": 35,
+    "engagedViews": 35,
+    "avgViewPct": 29.25
    },
    "2026-08-26": {
-    "views": 12,
-    "engagedViews": 12,
-    "avgViewPct": 50.48
+    "views": 20,
+    "engagedViews": 20,
+    "avgViewPct": 26.42
    },
    "2026-08-27": {
-    "views": 17,
-    "engagedViews": 11,
-    "avgViewPct": 73.73
+    "views": 59,
+    "engagedViews": 26,
+    "avgViewPct": 31.47
    },
    "2026-08-28": {
-    "views": 10,
-    "engagedViews": 7,
-    "avgViewPct": 18.45
+    "views": 46,
+    "engagedViews": 16,
+    "avgViewPct": 33.7
    },
    "2026-08-29": {
-    "views": 8,
-    "engagedViews": 7,
-    "avgViewPct": 72.98
+    "views": 48,
+    "engagedViews": 17,
+    "avgViewPct": 39.4
+   }
+  },
+  "f-tug0l-d7U": {
+   "2026-08-20": {
+    "views": 49,
+    "engagedViews": 49,
+    "avgViewPct": 37.85
+   },
+   "2026-08-21": {
+    "views": 52,
+    "engagedViews": 52,
+    "avgViewPct": 26.35
+   },
+   "2026-08-22": {
+    "views": 52,
+    "engagedViews": 52,
+    "avgViewPct": 31.07
+   },
+   "2026-08-23": {
+    "views": 64,
+    "engagedViews": 64,
+    "avgViewPct": 27.74
+   },
+   "2026-08-24": {
+    "views": 67,
+    "engagedViews": 67,
+    "avgViewPct": 35.59
+   },
+   "2026-08-25": {
+    "views": 54,
+    "engagedViews": 54,
+    "avgViewPct": 32.03
+   },
+   "2026-08-26": {
+    "views": 63,
+    "engagedViews": 63,
+    "avgViewPct": 25.55
+   },
+   "2026-08-27": {
+    "views": 60,
+    "engagedViews": 47,
+    "avgViewPct": 33.55
+   },
+   "2026-08-28": {
+    "views": 54,
+    "engagedViews": 48,
+    "avgViewPct": 32.72
+   },
+   "2026-08-29": {
+    "views": 82,
+    "engagedViews": 61,
+    "avgViewPct": 37.28
    }
   },
   "625qC8XCMm8": {
-   "2026-08-19": {
-    "views": 25,
-    "engagedViews": 25,
-    "avgViewPct": 50.96
-   },
    "2026-08-20": {
     "views": 27,
     "engagedViews": 27,
@@ -1456,11 +874,6 @@
    }
   },
   "ZUuudT9Vn_w": {
-   "2026-08-19": {
-    "views": 123,
-    "engagedViews": 123,
-    "avgViewPct": 32.15
-   },
    "2026-08-20": {
     "views": 101,
     "engagedViews": 101,
@@ -1512,183 +925,148 @@
     "avgViewPct": 27.58
    }
   },
-  "Q5-kOGAdBmI": {
-   "2026-08-19": {
-    "views": 1212,
-    "engagedViews": 1210,
-    "avgViewPct": 36.56
-   },
+  "UEDeuUouDmQ": {
    "2026-08-20": {
-    "views": 956,
-    "engagedViews": 955,
-    "avgViewPct": 37.22
+    "views": 24,
+    "engagedViews": 24,
+    "avgViewPct": 35.05
    },
    "2026-08-21": {
-    "views": 1253,
-    "engagedViews": 1252,
-    "avgViewPct": 34.53
+    "views": 14,
+    "engagedViews": 14,
+    "avgViewPct": 38.05
    },
    "2026-08-22": {
-    "views": 1435,
-    "engagedViews": 1433,
-    "avgViewPct": 32.78
+    "views": 11,
+    "engagedViews": 11,
+    "avgViewPct": 30.48
    },
    "2026-08-23": {
-    "views": 1602,
-    "engagedViews": 1598,
-    "avgViewPct": 33.84
+    "views": 16,
+    "engagedViews": 16,
+    "avgViewPct": 24.68
    },
    "2026-08-24": {
-    "views": 1300,
-    "engagedViews": 1300,
-    "avgViewPct": 35.55
+    "views": 24,
+    "engagedViews": 24,
+    "avgViewPct": 44.31
    },
    "2026-08-25": {
-    "views": 1278,
-    "engagedViews": 1275,
-    "avgViewPct": 34.33
+    "views": 15,
+    "engagedViews": 15,
+    "avgViewPct": 51.18
    },
    "2026-08-26": {
-    "views": 1337,
-    "engagedViews": 1322,
-    "avgViewPct": 37.47
+    "views": 16,
+    "engagedViews": 16,
+    "avgViewPct": 53.35
    },
    "2026-08-27": {
-    "views": 3083,
-    "engagedViews": 1204,
-    "avgViewPct": 33.62
+    "views": 21,
+    "engagedViews": 15,
+    "avgViewPct": 50.84
    },
    "2026-08-28": {
-    "views": 2375,
-    "engagedViews": 1033,
-    "avgViewPct": 36.16
+    "views": 29,
+    "engagedViews": 10,
+    "avgViewPct": 51.56
    },
    "2026-08-29": {
-    "views": 2101,
-    "engagedViews": 942,
-    "avgViewPct": 38.38
+    "views": 27,
+    "engagedViews": 12,
+    "avgViewPct": 68.78
    }
   },
-  "3MtsASdntAc": {
-   "2026-08-19": {
-    "views": 9,
-    "engagedViews": 9,
-    "avgViewPct": 42.98
-   },
+  "rTkdY2ucJtM": {
    "2026-08-20": {
-    "views": 6,
-    "engagedViews": 6,
-    "avgViewPct": 10.29
-   },
-   "2026-08-21": {
     "views": 2,
     "engagedViews": 2,
-    "avgViewPct": 48.95
+    "avgViewPct": 2.19
+   },
+   "2026-08-21": {
+    "views": 0,
+    "engagedViews": 0,
+    "avgViewPct": 0
    },
    "2026-08-22": {
-    "views": 6,
-    "engagedViews": 6,
-    "avgViewPct": 64.49
+    "views": 0,
+    "engagedViews": 0,
+    "avgViewPct": 0
    },
    "2026-08-23": {
     "views": 2,
     "engagedViews": 2,
-    "avgViewPct": 1.2
-   },
-   "2026-08-24": {
-    "views": 4,
-    "engagedViews": 4,
-    "avgViewPct": 33.25
+    "avgViewPct": 0.25
    },
    "2026-08-25": {
-    "views": 4,
-    "engagedViews": 4,
-    "avgViewPct": 49.21
+    "views": 2,
+    "engagedViews": 2,
+    "avgViewPct": 1.46
    },
    "2026-08-26": {
-    "views": 7,
-    "engagedViews": 7,
-    "avgViewPct": 60.66
+    "views": 2,
+    "engagedViews": 2,
+    "avgViewPct": 20.39
    },
    "2026-08-27": {
-    "views": 10,
-    "engagedViews": 4,
-    "avgViewPct": 20.86
-   },
-   "2026-08-28": {
-    "views": 5,
+    "views": 2,
     "engagedViews": 2,
-    "avgViewPct": 99.61
-   },
-   "2026-08-29": {
-    "views": 5,
-    "engagedViews": 2,
-    "avgViewPct": 37.52
+    "avgViewPct": 6.68
    }
   },
-  "JO2JSj3JU48": {
-   "2026-08-19": {
-    "views": 2098,
-    "engagedViews": 2097,
-    "avgViewPct": 18.72
-   },
+  "d3PVbDSP8m8": {
    "2026-08-20": {
-    "views": 1854,
-    "engagedViews": 1854,
-    "avgViewPct": 18.19
+    "views": 71,
+    "engagedViews": 71,
+    "avgViewPct": 46.9
    },
    "2026-08-21": {
-    "views": 1445,
-    "engagedViews": 1445,
-    "avgViewPct": 18.66
+    "views": 61,
+    "engagedViews": 61,
+    "avgViewPct": 41.85
    },
    "2026-08-22": {
-    "views": 1315,
-    "engagedViews": 1314,
-    "avgViewPct": 18.76
+    "views": 50,
+    "engagedViews": 50,
+    "avgViewPct": 43.57
    },
    "2026-08-23": {
-    "views": 1499,
-    "engagedViews": 1498,
-    "avgViewPct": 19.47
+    "views": 45,
+    "engagedViews": 45,
+    "avgViewPct": 38.78
    },
    "2026-08-24": {
-    "views": 1305,
-    "engagedViews": 1305,
-    "avgViewPct": 21.49
+    "views": 67,
+    "engagedViews": 67,
+    "avgViewPct": 47.85
    },
    "2026-08-25": {
-    "views": 1199,
-    "engagedViews": 1199,
-    "avgViewPct": 19.34
+    "views": 70,
+    "engagedViews": 70,
+    "avgViewPct": 39.74
    },
    "2026-08-26": {
-    "views": 1184,
-    "engagedViews": 1173,
-    "avgViewPct": 20.71
+    "views": 84,
+    "engagedViews": 82,
+    "avgViewPct": 46.69
    },
    "2026-08-27": {
-    "views": 2091,
-    "engagedViews": 933,
-    "avgViewPct": 20.9
+    "views": 97,
+    "engagedViews": 62,
+    "avgViewPct": 39.86
    },
    "2026-08-28": {
-    "views": 2020,
-    "engagedViews": 928,
-    "avgViewPct": 18.45
+    "views": 133,
+    "engagedViews": 79,
+    "avgViewPct": 42.97
    },
    "2026-08-29": {
-    "views": 1803,
-    "engagedViews": 834,
-    "avgViewPct": 18.09
+    "views": 113,
+    "engagedViews": 61,
+    "avgViewPct": 41.07
    }
   },
   "zzrOxIMm4BI": {
-   "2026-08-19": {
-    "views": 30,
-    "engagedViews": 30,
-    "avgViewPct": 42.54
-   },
    "2026-08-20": {
     "views": 30,
     "engagedViews": 30,
@@ -1740,12 +1118,423 @@
     "avgViewPct": 47.32
    }
   },
-  "waKgJnhaubs": {
-   "2026-08-19": {
-    "views": 82,
-    "engagedViews": 82,
-    "avgViewPct": 28.23
+  "XDd4u2xnRtE": {
+   "2026-08-20": {
+    "views": 123,
+    "engagedViews": 123,
+    "avgViewPct": 36.53
    },
+   "2026-08-21": {
+    "views": 124,
+    "engagedViews": 124,
+    "avgViewPct": 36.27
+   },
+   "2026-08-22": {
+    "views": 142,
+    "engagedViews": 142,
+    "avgViewPct": 36.5
+   },
+   "2026-08-23": {
+    "views": 130,
+    "engagedViews": 130,
+    "avgViewPct": 35.36
+   },
+   "2026-08-24": {
+    "views": 126,
+    "engagedViews": 126,
+    "avgViewPct": 38.14
+   },
+   "2026-08-25": {
+    "views": 127,
+    "engagedViews": 127,
+    "avgViewPct": 38.01
+   },
+   "2026-08-26": {
+    "views": 127,
+    "engagedViews": 126,
+    "avgViewPct": 31.91
+   },
+   "2026-08-27": {
+    "views": 281,
+    "engagedViews": 112,
+    "avgViewPct": 35.05
+   },
+   "2026-08-28": {
+    "views": 240,
+    "engagedViews": 118,
+    "avgViewPct": 32.26
+   },
+   "2026-08-29": {
+    "views": 219,
+    "engagedViews": 102,
+    "avgViewPct": 33.9
+   }
+  },
+  "635ZL8nTsD8": {
+   "2026-08-20": {
+    "views": 63,
+    "engagedViews": 63,
+    "avgViewPct": 26.04
+   },
+   "2026-08-21": {
+    "views": 74,
+    "engagedViews": 74,
+    "avgViewPct": 31.33
+   },
+   "2026-08-22": {
+    "views": 79,
+    "engagedViews": 79,
+    "avgViewPct": 31.3
+   },
+   "2026-08-23": {
+    "views": 67,
+    "engagedViews": 67,
+    "avgViewPct": 26.35
+   },
+   "2026-08-24": {
+    "views": 71,
+    "engagedViews": 71,
+    "avgViewPct": 27.98
+   },
+   "2026-08-25": {
+    "views": 72,
+    "engagedViews": 72,
+    "avgViewPct": 22.61
+   },
+   "2026-08-26": {
+    "views": 78,
+    "engagedViews": 77,
+    "avgViewPct": 27.54
+   },
+   "2026-08-27": {
+    "views": 133,
+    "engagedViews": 59,
+    "avgViewPct": 35.87
+   },
+   "2026-08-28": {
+    "views": 113,
+    "engagedViews": 49,
+    "avgViewPct": 19.07
+   },
+   "2026-08-29": {
+    "views": 141,
+    "engagedViews": 53,
+    "avgViewPct": 31.46
+   }
+  },
+  "vvNXOJUfg3I": {
+   "2026-08-20": {
+    "views": 466,
+    "engagedViews": 466,
+    "avgViewPct": 28.52
+   },
+   "2026-08-21": {
+    "views": 376,
+    "engagedViews": 376,
+    "avgViewPct": 27.7
+   },
+   "2026-08-22": {
+    "views": 369,
+    "engagedViews": 369,
+    "avgViewPct": 28.49
+   },
+   "2026-08-23": {
+    "views": 510,
+    "engagedViews": 509,
+    "avgViewPct": 25.61
+   },
+   "2026-08-24": {
+    "views": 332,
+    "engagedViews": 332,
+    "avgViewPct": 27.97
+   },
+   "2026-08-25": {
+    "views": 300,
+    "engagedViews": 300,
+    "avgViewPct": 27.97
+   },
+   "2026-08-26": {
+    "views": 288,
+    "engagedViews": 288,
+    "avgViewPct": 28.77
+   },
+   "2026-08-27": {
+    "views": 481,
+    "engagedViews": 256,
+    "avgViewPct": 31.11
+   },
+   "2026-08-28": {
+    "views": 349,
+    "engagedViews": 193,
+    "avgViewPct": 27.58
+   },
+   "2026-08-29": {
+    "views": 384,
+    "engagedViews": 233,
+    "avgViewPct": 33.24
+   }
+  },
+  "LrIr93kC9mc": {
+   "2026-08-20": {
+    "views": 87,
+    "engagedViews": 87,
+    "avgViewPct": 37.04
+   },
+   "2026-08-21": {
+    "views": 77,
+    "engagedViews": 77,
+    "avgViewPct": 30.16
+   },
+   "2026-08-22": {
+    "views": 94,
+    "engagedViews": 94,
+    "avgViewPct": 29.85
+   },
+   "2026-08-23": {
+    "views": 108,
+    "engagedViews": 108,
+    "avgViewPct": 30.02
+   },
+   "2026-08-24": {
+    "views": 106,
+    "engagedViews": 106,
+    "avgViewPct": 38.79
+   },
+   "2026-08-25": {
+    "views": 85,
+    "engagedViews": 85,
+    "avgViewPct": 31.21
+   },
+   "2026-08-26": {
+    "views": 80,
+    "engagedViews": 80,
+    "avgViewPct": 32.28
+   },
+   "2026-08-27": {
+    "views": 130,
+    "engagedViews": 74,
+    "avgViewPct": 29.12
+   },
+   "2026-08-28": {
+    "views": 110,
+    "engagedViews": 70,
+    "avgViewPct": 22.03
+   },
+   "2026-08-29": {
+    "views": 123,
+    "engagedViews": 71,
+    "avgViewPct": 37.35
+   }
+  },
+  "JO2JSj3JU48": {
+   "2026-08-20": {
+    "views": 1854,
+    "engagedViews": 1854,
+    "avgViewPct": 18.19
+   },
+   "2026-08-21": {
+    "views": 1445,
+    "engagedViews": 1445,
+    "avgViewPct": 18.66
+   },
+   "2026-08-22": {
+    "views": 1315,
+    "engagedViews": 1314,
+    "avgViewPct": 18.76
+   },
+   "2026-08-23": {
+    "views": 1499,
+    "engagedViews": 1498,
+    "avgViewPct": 19.47
+   },
+   "2026-08-24": {
+    "views": 1305,
+    "engagedViews": 1305,
+    "avgViewPct": 21.49
+   },
+   "2026-08-25": {
+    "views": 1199,
+    "engagedViews": 1199,
+    "avgViewPct": 19.34
+   },
+   "2026-08-26": {
+    "views": 1184,
+    "engagedViews": 1173,
+    "avgViewPct": 20.71
+   },
+   "2026-08-27": {
+    "views": 2091,
+    "engagedViews": 933,
+    "avgViewPct": 20.9
+   },
+   "2026-08-28": {
+    "views": 2020,
+    "engagedViews": 928,
+    "avgViewPct": 18.45
+   },
+   "2026-08-29": {
+    "views": 1803,
+    "engagedViews": 834,
+    "avgViewPct": 18.09
+   }
+  },
+  "NHKW4sOSwT0": {
+   "2026-08-20": {
+    "views": 10,
+    "engagedViews": 10,
+    "avgViewPct": 51.35
+   },
+   "2026-08-21": {
+    "views": 13,
+    "engagedViews": 13,
+    "avgViewPct": 30.2
+   },
+   "2026-08-22": {
+    "views": 9,
+    "engagedViews": 9,
+    "avgViewPct": 71.46
+   },
+   "2026-08-23": {
+    "views": 5,
+    "engagedViews": 5,
+    "avgViewPct": 17.45
+   },
+   "2026-08-24": {
+    "views": 9,
+    "engagedViews": 9,
+    "avgViewPct": 39.45
+   },
+   "2026-08-25": {
+    "views": 10,
+    "engagedViews": 10,
+    "avgViewPct": 59.67
+   },
+   "2026-08-26": {
+    "views": 12,
+    "engagedViews": 12,
+    "avgViewPct": 50.48
+   },
+   "2026-08-27": {
+    "views": 17,
+    "engagedViews": 11,
+    "avgViewPct": 73.73
+   },
+   "2026-08-28": {
+    "views": 10,
+    "engagedViews": 7,
+    "avgViewPct": 18.45
+   },
+   "2026-08-29": {
+    "views": 8,
+    "engagedViews": 7,
+    "avgViewPct": 72.98
+   }
+  },
+  "swaKs3uM4NQ": {
+   "2026-08-20": {
+    "views": 22,
+    "engagedViews": 22,
+    "avgViewPct": 23.88
+   },
+   "2026-08-21": {
+    "views": 10,
+    "engagedViews": 10,
+    "avgViewPct": 12.08
+   },
+   "2026-08-22": {
+    "views": 12,
+    "engagedViews": 12,
+    "avgViewPct": 27.97
+   },
+   "2026-08-23": {
+    "views": 21,
+    "engagedViews": 21,
+    "avgViewPct": 14.45
+   },
+   "2026-08-24": {
+    "views": 17,
+    "engagedViews": 17,
+    "avgViewPct": 47.46
+   },
+   "2026-08-25": {
+    "views": 16,
+    "engagedViews": 16,
+    "avgViewPct": 42.6
+   },
+   "2026-08-26": {
+    "views": 16,
+    "engagedViews": 16,
+    "avgViewPct": 45.95
+   },
+   "2026-08-27": {
+    "views": 48,
+    "engagedViews": 12,
+    "avgViewPct": 10.21
+   },
+   "2026-08-28": {
+    "views": 39,
+    "engagedViews": 13,
+    "avgViewPct": 37.19
+   },
+   "2026-08-29": {
+    "views": 43,
+    "engagedViews": 10,
+    "avgViewPct": 23.95
+   }
+  },
+  "gRPJd1xSRyo": {
+   "2026-08-20": {
+    "views": 235,
+    "engagedViews": 235,
+    "avgViewPct": 43.12
+   },
+   "2026-08-21": {
+    "views": 286,
+    "engagedViews": 286,
+    "avgViewPct": 40.35
+   },
+   "2026-08-22": {
+    "views": 396,
+    "engagedViews": 396,
+    "avgViewPct": 39.13
+   },
+   "2026-08-23": {
+    "views": 373,
+    "engagedViews": 373,
+    "avgViewPct": 37.6
+   },
+   "2026-08-24": {
+    "views": 332,
+    "engagedViews": 332,
+    "avgViewPct": 42.91
+   },
+   "2026-08-25": {
+    "views": 296,
+    "engagedViews": 296,
+    "avgViewPct": 41.7
+   },
+   "2026-08-26": {
+    "views": 294,
+    "engagedViews": 288,
+    "avgViewPct": 47.09
+   },
+   "2026-08-27": {
+    "views": 722,
+    "engagedViews": 285,
+    "avgViewPct": 42.86
+   },
+   "2026-08-28": {
+    "views": 616,
+    "engagedViews": 219,
+    "avgViewPct": 49
+   },
+   "2026-08-29": {
+    "views": 599,
+    "engagedViews": 212,
+    "avgViewPct": 38.84
+   }
+  },
+  "waKgJnhaubs": {
    "2026-08-20": {
     "views": 97,
     "engagedViews": 97,
@@ -1796,55 +1585,113 @@
     "engagedViews": 47,
     "avgViewPct": 38.27
    }
+  },
+  "3MtsASdntAc": {
+   "2026-08-20": {
+    "views": 6,
+    "engagedViews": 6,
+    "avgViewPct": 10.29
+   },
+   "2026-08-21": {
+    "views": 2,
+    "engagedViews": 2,
+    "avgViewPct": 48.95
+   },
+   "2026-08-22": {
+    "views": 6,
+    "engagedViews": 6,
+    "avgViewPct": 64.49
+   },
+   "2026-08-23": {
+    "views": 2,
+    "engagedViews": 2,
+    "avgViewPct": 1.2
+   },
+   "2026-08-24": {
+    "views": 4,
+    "engagedViews": 4,
+    "avgViewPct": 33.25
+   },
+   "2026-08-25": {
+    "views": 4,
+    "engagedViews": 4,
+    "avgViewPct": 49.21
+   },
+   "2026-08-26": {
+    "views": 7,
+    "engagedViews": 7,
+    "avgViewPct": 60.66
+   },
+   "2026-08-27": {
+    "views": 10,
+    "engagedViews": 4,
+    "avgViewPct": 20.86
+   },
+   "2026-08-28": {
+    "views": 5,
+    "engagedViews": 2,
+    "avgViewPct": 99.61
+   },
+   "2026-08-29": {
+    "views": 5,
+    "engagedViews": 2,
+    "avgViewPct": 37.52
+   }
+  },
+  "Q5-kOGAdBmI": {
+   "2026-08-20": {
+    "views": 956,
+    "engagedViews": 955,
+    "avgViewPct": 37.22
+   },
+   "2026-08-21": {
+    "views": 1253,
+    "engagedViews": 1252,
+    "avgViewPct": 34.53
+   },
+   "2026-08-22": {
+    "views": 1435,
+    "engagedViews": 1433,
+    "avgViewPct": 32.78
+   },
+   "2026-08-23": {
+    "views": 1602,
+    "engagedViews": 1598,
+    "avgViewPct": 33.84
+   },
+   "2026-08-24": {
+    "views": 1300,
+    "engagedViews": 1300,
+    "avgViewPct": 35.55
+   },
+   "2026-08-25": {
+    "views": 1278,
+    "engagedViews": 1275,
+    "avgViewPct": 34.33
+   },
+   "2026-08-26": {
+    "views": 1337,
+    "engagedViews": 1322,
+    "avgViewPct": 37.47
+   },
+   "2026-08-27": {
+    "views": 3083,
+    "engagedViews": 1204,
+    "avgViewPct": 33.62
+   },
+   "2026-08-28": {
+    "views": 2375,
+    "engagedViews": 1033,
+    "avgViewPct": 36.16
+   },
+   "2026-08-29": {
+    "views": 2101,
+    "engagedViews": 942,
+    "avgViewPct": 38.38
+   }
   }
  },
  "traffic_days": {
-  "2026-08-19": {
-   "NO_LINK_OTHER": {
-    "views": 496,
-    "engagedViews": 492
-   },
-   "SUBSCRIBER": {
-    "views": 8884,
-    "engagedViews": 8884
-   },
-   "YT_CHANNEL": {
-    "views": 284,
-    "engagedViews": 280
-   },
-   "YT_SEARCH": {
-    "views": 648,
-    "engagedViews": 648
-   },
-   "RELATED_VIDEO": {
-    "views": 1627,
-    "engagedViews": 1624
-   },
-   "YT_OTHER_PAGE": {
-    "views": 324,
-    "engagedViews": 324
-   },
-   "EXT_URL": {
-    "views": 103,
-    "engagedViews": 103
-   },
-   "ANNOTATION": {
-    "views": 3,
-    "engagedViews": 3
-   },
-   "PLAYLIST": {
-    "views": 95,
-    "engagedViews": 95
-   },
-   "NOTIFICATION": {
-    "views": 109,
-    "engagedViews": 109
-   },
-   "END_SCREEN": {
-    "views": 64,
-    "engagedViews": 64
-   }
-  },
   "2026-08-20": {
    "NO_LINK_OTHER": {
     "views": 393,
@@ -2326,10 +2173,9 @@
    }
   }
  },
- "_last_full": "2026-08-31T22:49:41+00:00",
+ "_last_full": "2026-09-01T01:25:58+00:00",
  "_last_ping": "2026-08-31T22:49:41+00:00",
  "_rates": [
-  622.24,
   526.4,
   425.35,
   475.05,
@@ -2340,6 +2186,7 @@
   419.43,
   523.17,
   573.58,
-  637.38
+  637.38,
+  524.43
  ]
 }
