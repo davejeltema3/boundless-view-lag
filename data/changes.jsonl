@@ -35,3 +35,4 @@
 {"ts": "2026-09-01T15:34:59+00:00", "changes": ["REVISED 2026-08-26 avgViewPct: 28.1 -> 28.13", "REVISED 2026-08-27 avgViewPct: 28.3 -> 28.46"]}
 {"ts": "2026-09-01T21:24:52+00:00", "changes": ["NEW DAY 2026-08-30 appeared (lag 45.41h) -- views 13,422 / engaged 6,089 / gap 54.6% / avg view % 26.57"]}
 {"ts": "2026-09-02T05:47:08+00:00", "changes": ["REVISED 2026-08-28 views: 16,068 -> 15,649 (-419)", "REVISED 2026-08-28 engagedViews: 7,254 -> 7,222 (-32)"]}
+{"ts": "2026-09-02T20:07:38+00:00", "changes": ["NEW DAY 2026-08-31 appeared (lag 44.13h) -- views 12,807 / engaged 5,665 / gap 55.8% / avg view % 27.86"]}
