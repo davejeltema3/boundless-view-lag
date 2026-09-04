@@ -1,15 +1,15 @@
 {
- "ts": "2026-09-04T21:57:40+00:00",
+ "ts": "2026-09-04T23:39:10+00:00",
  "channel_public": {
   "viewCount": 4002078,
   "subscriberCount": 78200,
   "videoCount": 100
  },
- "catalog_views": 4076067,
+ "catalog_views": 4076810,
  "catalog_size": 113,
  "public": {
   "PD_eggeSbxg": [
-   17,
+   26,
    4,
    0
   ],
@@ -19,9 +19,9 @@
    0
   ],
   "BZVICN8caOE": [
-   34713,
-   882,
-   142
+   35124,
+   888,
+   143
   ],
   "6p1S5zOPUF4": [
    26552,
@@ -34,7 +34,7 @@
    0
   ],
   "N4o_vzqnATw": [
-   7968,
+   7969,
    453,
    158
   ],
@@ -54,12 +54,12 @@
    97
   ],
   "m63VSyZiEsA": [
-   6699,
-   525,
+   6722,
+   526,
    98
   ],
   "JtolbefPUtg": [
-   16890,
+   16895,
    1112,
    155
   ],
@@ -94,8 +94,8 @@
    119
   ],
   "CNtCAptzmB8": [
-   9943,
-   695,
+   9947,
+   696,
    86
   ],
   "0aG4xY3IFoo": [
@@ -104,27 +104,27 @@
    244
   ],
   "3GVEAl3akR0": [
-   7031,
+   7032,
    564,
    57
   ],
   "xXlnwIUdQlY": [
-   21537,
+   21539,
    1275,
    243
   ],
   "SqIPLESOOeg": [
-   6735,
+   6740,
    505,
    74
   ],
   "cwACFTas8Fc": [
-   7348,
+   7349,
    248,
    59
   ],
   "Hs8mihYscr4": [
-   6526,
+   6527,
    401,
    92
   ],
@@ -134,7 +134,7 @@
    161
   ],
   "rKKeLVYXlUU": [
-   12207,
+   12216,
    914,
    121
   ],
@@ -144,7 +144,7 @@
    430
   ],
   "WHSnoGjjHWE": [
-   6057,
+   6058,
    355,
    126
   ],
@@ -154,8 +154,8 @@
    96
   ],
   "JO2JSj3JU48": [
-   445487,
-   19025,
+   445511,
+   19026,
    1373
   ],
   "7i1MPsYHm0U": [
@@ -164,7 +164,7 @@
    111
   ],
   "d3PVbDSP8m8": [
-   123574,
+   123605,
    8223,
    1834
   ],
@@ -174,8 +174,8 @@
    705
   ],
   "3HHctWZf7MM": [
-   14777,
-   1088,
+   14788,
+   1089,
    161
   ],
   "625qC8XCMm8": [
@@ -194,7 +194,7 @@
    218
   ],
   "f0OZI3K36DQ": [
-   31763,
+   31770,
    1829,
    230
   ],
@@ -214,7 +214,7 @@
    224
   ],
   "aQ3c-Qa9kdk": [
-   9182,
+   9183,
    687,
    252
   ],
@@ -229,12 +229,12 @@
    60
   ],
   "xuzTW5S-8uc": [
-   23756,
-   1401,
+   23766,
+   1402,
    384
   ],
   "swaKs3uM4NQ": [
-   187603,
+   187607,
    11200,
    2232
   ],
@@ -254,7 +254,7 @@
    120
   ],
   "NHKW4sOSwT0": [
-   31611,
+   31613,
    2279,
    908
   ],
@@ -279,12 +279,12 @@
    781
   ],
   "Q5-kOGAdBmI": [
-   618061,
+   618166,
    32860,
    6174
   ],
   "spM0FKlDBUA": [
-   7166,
+   7165,
    513,
    62
   ],
@@ -389,7 +389,7 @@
    136
   ],
   "alW95bEY9pw": [
-   14224,
+   14225,
    931,
    135
   ],
@@ -404,7 +404,7 @@
    1431
   ],
   "2eybwTBhkPE": [
-   40577,
+   40591,
    2447,
    701
   ],
@@ -424,12 +424,12 @@
    79
   ],
   "635ZL8nTsD8": [
-   45201,
+   45234,
    2299,
    401
   ],
   "ta9kd7mlmqQ": [
-   10855,
+   10856,
    850,
    237
   ],
@@ -464,7 +464,7 @@
    96
   ],
   "WZzIBJjB8ww": [
-   5754,
+   5755,
    490,
    54
   ],
@@ -489,8 +489,8 @@
    57
   ],
   "TL9jYylixdg": [
-   4236,
-   309,
+   4237,
+   310,
    34
   ],
   "cbAy-Xsi78o": [
@@ -514,12 +514,12 @@
    585
   ],
   "qsXdeHaRFrA": [
-   10805,
+   10812,
    366,
    38
   ],
   "4X5lLrOu4GE": [
-   59915,
+   59932,
    2570,
    97
   ],
@@ -544,7 +544,7 @@
    8
   ],
   "113zkfI_OyQ": [
-   5160,
+   5161,
    341,
    72
   ],
@@ -601,7 +601,7 @@
   "2026-09-04"
  ],
  "latest_analytics_day": "2026-09-02",
- "lag_hours": 45.96,
+ "lag_hours": 47.65,
  "channel_days": {
   "2026-08-23": {
    "views": 8108,
@@ -2040,28 +2040,28 @@
   },
   "2026-08-28": {
    "NO_LINK_OTHER": {
-    "views": 369,
-    "engagedViews": 353
+    "views": 324,
+    "engagedViews": 314
    },
    "SUBSCRIBER": {
-    "views": 11703,
-    "engagedViews": 4259
+    "views": 11381,
+    "engagedViews": 4260
    },
    "YT_CHANNEL": {
-    "views": 278,
+    "views": 276,
     "engagedViews": 173
    },
    "YT_SEARCH": {
-    "views": 1248,
-    "engagedViews": 453
+    "views": 1225,
+    "engagedViews": 458
    },
    "RELATED_VIDEO": {
-    "views": 1540,
-    "engagedViews": 1427
+    "views": 1529,
+    "engagedViews": 1435
    },
    "YT_OTHER_PAGE": {
-    "views": 224,
-    "engagedViews": 188
+    "views": 218,
+    "engagedViews": 184
    },
    "EXT_URL": {
     "views": 71,
@@ -2072,11 +2072,11 @@
     "engagedViews": 1
    },
    "PLAYLIST": {
-    "views": 112,
-    "engagedViews": 110
+    "views": 111,
+    "engagedViews": 108
    },
    "NOTIFICATION": {
-    "views": 70,
+    "views": 71,
     "engagedViews": 70
    },
    "END_SCREEN": {
@@ -2084,8 +2084,8 @@
     "engagedViews": 67
    },
    "SHORTS": {
-    "views": 384,
-    "engagedViews": 81
+    "views": 374,
+    "engagedViews": 80
    },
    "SHORTS_CONTENT_LINKS": {
     "views": 1,
@@ -2098,7 +2098,7 @@
     "engagedViews": 284
    },
    "SUBSCRIBER": {
-    "views": 9185,
+    "views": 9180,
     "engagedViews": 3530
    },
    "YT_CHANNEL": {
@@ -2144,74 +2144,74 @@
   },
   "2026-08-30": {
    "NO_LINK_OTHER": {
-    "views": 308,
-    "engagedViews": 296
+    "views": 277,
+    "engagedViews": 266
    },
    "SUBSCRIBER": {
-    "views": 9794,
-    "engagedViews": 3663
+    "views": 9743,
+    "engagedViews": 3655
    },
    "YT_CHANNEL": {
-    "views": 279,
-    "engagedViews": 182
+    "views": 277,
+    "engagedViews": 181
    },
    "YT_SEARCH": {
-    "views": 1268,
-    "engagedViews": 494
+    "views": 1272,
+    "engagedViews": 498
    },
    "RELATED_VIDEO": {
-    "views": 1054,
-    "engagedViews": 979
+    "views": 1052,
+    "engagedViews": 988
    },
    "YT_OTHER_PAGE": {
-    "views": 232,
-    "engagedViews": 197
+    "views": 223,
+    "engagedViews": 189
    },
    "EXT_URL": {
-    "views": 80,
-    "engagedViews": 80
+    "views": 81,
+    "engagedViews": 81
    },
    "ANNOTATION": {
     "views": 2,
     "engagedViews": 2
    },
    "PLAYLIST": {
-    "views": 83,
-    "engagedViews": 79
+    "views": 82,
+    "engagedViews": 80
    },
    "NOTIFICATION": {
     "views": 13,
     "engagedViews": 12
    },
    "END_SCREEN": {
-    "views": 61,
-    "engagedViews": 61
+    "views": 68,
+    "engagedViews": 62
    },
    "SHORTS": {
-    "views": 248,
+    "views": 246,
     "engagedViews": 44
    }
   },
   "2026-08-31": {
    "NO_LINK_OTHER": {
-    "views": 350,
-    "engagedViews": 340
+    "views": 311,
+    "engagedViews": 306
    },
    "SUBSCRIBER": {
-    "views": 9279,
-    "engagedViews": 3248
+    "views": 9150,
+    "engagedViews": 3256
    },
    "YT_CHANNEL": {
-    "views": 278,
-    "engagedViews": 174
+    "views": 279,
+    "engagedViews": 175
    },
    "YT_SEARCH": {
-    "views": 1391,
-    "engagedViews": 525
+    "views": 1378,
+    "engagedViews": 526
    },
    "RELATED_VIDEO": {
-    "views": 1036,
-    "engagedViews": 986
+    "views": 1044,
+    "engagedViews": 996
    },
    "YT_OTHER_PAGE": {
     "views": 173,
@@ -2222,7 +2222,7 @@
     "engagedViews": 81
    },
    "PLAYLIST": {
-    "views": 91,
+    "views": 92,
     "engagedViews": 86
    },
    "NOTIFICATION": {
@@ -2234,7 +2234,7 @@
     "engagedViews": 55
    },
    "SHORTS": {
-    "views": 63,
+    "views": 62,
     "engagedViews": 19
    }
   },
@@ -2335,10 +2335,9 @@
    }
   }
  },
- "_last_full": "2026-09-04T21:57:40+00:00",
+ "_last_full": "2026-09-04T23:39:10+00:00",
  "_last_ping": "2026-09-04T19:55:11+00:00",
  "_rates": [
-  305.41,
   383.81,
   490.97,
   578.5,
@@ -2349,6 +2348,7 @@
   383.43,
   353.15,
   406.37,
-  405.61
+  405.61,
+  439.21
  ]
 }
