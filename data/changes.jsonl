@@ -41,3 +41,4 @@
 {"ts": "2026-09-04T19:55:11+00:00", "changes": ["NEW DAY 2026-09-02 appeared (lag 43.92h) -- views 11,758 / engaged 4,917 / gap 58.2% / avg view % 26.66"]}
 {"ts": "2026-09-05T19:27:40+00:00", "changes": ["NEW DAY 2026-09-03 appeared (lag 43.46h) -- views 11,390 / engaged 4,930 / gap 56.7% / avg view % 27.1"]}
 {"ts": "2026-09-06T20:01:11+00:00", "changes": ["NEW DAY 2026-09-04 appeared (lag 44.02h) -- views 9,028 / engaged 4,137 / gap 54.2% / avg view % 25.55"]}
+{"ts": "2026-09-06T22:03:03+00:00", "changes": ["RATE JUMP public views running at 909/hr vs trailing median 392/hr (2.3x) -- +1847 views in 122 min"]}
