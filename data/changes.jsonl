@@ -68,3 +68,4 @@
 {"ts": "2026-09-20T16:59:58+00:00", "changes": ["REVISED 2026-09-15 avgViewPct: 29.76 -> 29.82"]}
 {"ts": "2026-09-20T19:17:57+00:00", "changes": ["NEW DAY 2026-09-18 appeared (lag 43.3h) -- views 10,284 / engaged 4,052 / gap 60.6% / avg view % 30.96"]}
 {"ts": "2026-09-20T21:36:55+00:00", "changes": ["REVISED 2026-09-15 views: 10,252 -> 9,243 (-1009)", "REVISED 2026-09-15 engagedViews: 4,122 -> 4,116 (-6)"]}
+{"ts": "2026-09-21T06:33:15+00:00", "changes": ["REVISED 2026-09-16 views: 10,640 -> 8,770 (-1870)", "REVISED 2026-09-16 engagedViews: 3,922 -> 3,889 (-33)", "REVISED 2026-09-16 avgViewPct: 30.32 -> 30.31"]}
