@@ -112,3 +112,4 @@
 {"ts": "2026-10-11T22:27:54+00:00", "changes": ["NEW DAY 2026-10-09 appeared (lag 46.47h) -- views 9,303 / engaged 4,272 / gap 54.1% / avg view % 27.37"]}
 {"ts": "2026-10-12T07:55:27+00:00", "changes": ["REVISED 2026-10-05 avgViewPct: 28.5 -> 28.53", "REVISED 2026-10-06 avgViewPct: 27.86 -> 27.9"]}
 {"ts": "2026-10-12T23:36:15+00:00", "changes": ["NEW DAY 2026-10-10 appeared (lag 47.6h) -- views 8,269 / engaged 3,707 / gap 55.2% / avg view % 25.79", "REVISED 2026-10-05 views: 10,260 -> 10,250 (-10)", "REVISED 2026-10-05 engagedViews: 4,860 -> 4,857 (-3)"]}
+{"ts": "2026-10-13T18:15:15+00:00", "changes": ["REVISED 2026-10-07 views: 12,792 -> 11,829 (-963)", "REVISED 2026-10-07 engagedViews: 5,346 -> 5,321 (-25)", "REVISED 2026-10-07 avgViewPct: 27.39 -> 27.43"]}
