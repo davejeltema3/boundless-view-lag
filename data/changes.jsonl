@@ -168,3 +168,4 @@
 {"ts": "2026-11-06T02:54:57+00:00", "changes": ["RATE JUMP public views running at 1302/hr vs trailing median 370/hr (3.5x) -- +5238 views in 241 min"]}
 {"ts": "2026-11-06T17:25:04+00:00", "changes": ["REVISED 2026-10-30 views: 8,272 -> 8,200 (-72)", "REVISED 2026-10-30 engagedViews: 3,838 -> 3,819 (-19)", "REVISED 2026-10-31 views: 6,872 -> 6,789 (-83)", "REVISED 2026-10-31 engagedViews: 3,268 -> 3,246 (-22)", "REVISED 2026-11-01 views: 7,883 -> 7,798 (-85)", "REVISED 2026-11-01 engagedViews: 3,504 -> 3,473 (-31)"]}
 {"ts": "2026-11-07T01:55:17+00:00", "changes": ["NEW DAY 2026-11-04 appeared (lag 49.92h) -- views 7,988 / engaged 3,739 / gap 53.2% / avg view % 30.8"]}
+{"ts": "2026-11-07T14:47:28+00:00", "changes": ["REVISED 2026-11-02 avgViewPct: 30.86 -> 30.72", "REVISED 2026-11-03 avgViewPct: 32.01 -> 32.11"]}
