@@ -194,3 +194,4 @@
 {"ts": "2026-11-23T09:44:15+00:00", "changes": ["REVISED 2026-11-18 views: 5,747 -> 5,715 (-32)", "REVISED 2026-11-18 engagedViews: 2,471 -> 2,458 (-13)", "REVISED 2026-11-19 views: 5,605 -> 5,552 (-53)", "REVISED 2026-11-19 engagedViews: 2,473 -> 2,457 (-16)"]}
 {"ts": "2026-11-23T21:41:04+00:00", "changes": ["NEW DAY 2026-11-21 appeared (lag 45.68h) -- views 5,129 / engaged 2,262 / gap 55.9% / avg view % 27.52", "REVISED 2026-11-19 avgViewPct: 28.69 -> 28.86"]}
 {"ts": "2026-11-25T00:41:35+00:00", "changes": ["NEW DAY 2026-11-22 appeared (lag 48.69h) -- views 5,978 / engaged 2,592 / gap 56.6% / avg view % 27.24", "REVISED 2026-11-20 views: 5,119 -> 5,105 (-14)", "REVISED 2026-11-20 engagedViews: 2,242 -> 2,232 (-10)"]}
+{"ts": "2026-11-25T09:09:23+00:00", "changes": ["REVISED 2026-11-20 avgViewPct: 29.09 -> 29.14"]}
